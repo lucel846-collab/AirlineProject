@@ -22,7 +22,6 @@ def main():
     route_master = read_route_master()
 
     errors = validate(df, airport_master, airline_master, route_master)
-
     if errors:
 
         export_validation_errors(errors, ERROR_FILE)
