@@ -38,7 +38,7 @@ def validate(df: pd.DataFrame, airport_master_df: pd.DataFrame, airline_master_d
     validate_airline_code(df, airline_master_df, errors)
     validate_airport_code(df, airport_master_df, errors)
     validate_route(df, route_master_df, errors)
-
+    return errors
 
 def add_error(errors: List, row, column, value, message) -> None:
     errors.append({"行番号":row+2,"項目名":column,"入力値":value,"エラー内容":message})
@@ -68,7 +68,7 @@ def validate_required(df: pd.Dataframe, errors:List) -> None:
 
 
 def validate_operation_type(df: pd.DataFrame, errors: List) -> None:
-
+    
     for index, value in df["運航区分"].items():
 
         if value not in VALID_OPERATION_TYPES:
@@ -97,7 +97,7 @@ def validate_seat_count(df: pd.DataFrame, errors: List) -> None:
 
 
 def validate_dvt_arrival(df: pd.DataFrame, errors: List) -> None:
-
+    
     for index, row in df.iterrows():
 
         if row["運航区分"] == "XD(DVT)":
