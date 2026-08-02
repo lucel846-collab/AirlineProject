@@ -26,7 +26,13 @@ VALID_OPERATION_TYPES = {
 }
 
 
-def validate(df: pd.DataFrame, airport_master_df: pd.DataFrame, airline_master_df: pd.DataFrame, route_master_df: pd.DataFrame) -> List:
+def validate(df: pd.DataFrame, 
+             airport_master_df: pd.DataFrame, 
+             airline_master_df: pd.DataFrame, 
+             route_master_df: pd.DataFrame,
+             route_alias_dict: dict[tuple[str, str, str], str],
+             airport_alias_dict: dict[str, str],
+             ) -> List:
     errors = []
     validate_columns(df,errors)
     validate_required(df,errors)
@@ -36,8 +42,8 @@ def validate(df: pd.DataFrame, airport_master_df: pd.DataFrame, airline_master_d
     validate_Cancelled_flights(df,errors)
     validate_previous_date_check(df,errors)
     validate_airline_code(df, airline_master_df, errors)
-    validate_airport_code(df, airport_master_df, errors)
-    validate_route(df, route_master_df, errors)
+    validate_airport_alias(df, airport_alias_dict, errors)
+    validate_route_alias(df, route_alias_dict, errors)
     return errors
 
 def add_error(errors: List, row, column, value, message) -> None:
@@ -129,6 +135,7 @@ def validate_Cancelled_flights(df: pd.DataFrame, errors:List) -> None:
                         row[col],
                         "CXL/CNLの場合は0である必要があります。"
                     )
+
 def validate_previous_date_check(df: pd.DataFrame, errors:List) -> None:
     today = pd.Timestamp.today().normalize()
     first_date = today.replace(day=1)
@@ -143,6 +150,7 @@ def validate_previous_date_check(df: pd.DataFrame, errors:List) -> None:
                 row["運航日"],
                 "運航日は前月である必要があります。"
             )
+
 def validate_airline_code(df: pd.DataFrame, airline_master_df: pd.DataFrame, errors: List) -> None:
 
     airline_codes = set(airline_master_df["AirlineCD"])
@@ -155,28 +163,33 @@ def validate_airline_code(df: pd.DataFrame, airline_master_df: pd.DataFrame, err
                 value,
                 "航空会社コードがマスタに存在しません"
             )  
-def validate_airport_code(df: pd.DataFrame, airport_master_df: pd.DataFrame, errors: List) -> None:
-    airport_codes = set(airport_master_df["AirportCD"])
+
+def validate_airport_alias(df: pd.DataFrame, airport_alias_dict: dict[str, str], errors: List) -> None:
     for column in ("出発空港", "到着空港"):
         for index, value in df[column].items():
-            if value not in airport_codes:
+            if value not in airport_alias_dict:
                 add_error(
                     errors,
                     index,
                     column,
                     value,
-                    f"{column}コードがマスタに存在しません"
-                )  
-  
-def validate_route(df: pd.DataFrame, route_master_df: pd.DataFrame, errors: List) -> None:
-    route_set = set(zip(route_master_df["dptrAirport"], route_master_df["ArrvAirport"]))
+                    f"{column}コードがエイリアスマスタに存在しません"
+                )
+            
+def validate_route_alias(df: pd.DataFrame, route_alias_dict: dict[tuple[str, str, str], str], errors: List) -> None:
     for index, row in df.iterrows():
-        routes = (row['出発空港'], row['到着空港'])
-        if routes not in route_set:
+        key = (
+            row["航空会社"],
+            row["事業所"],
+            f"{row['出発空港']}{row['到着空港']}"
+        )
+
+        if key not in route_alias_dict:
             add_error(
                 errors,
                 index,
                 "路線コード",
-                row['路線コード'],
-                "路線コードがマスタに存在しません"
+                f"{row['航空会社']}-{row['事業所']}-{row['出発空港']}{row['到着空港']}",
+                "路線コードがエイリアスマスタに存在しません"
             )
+

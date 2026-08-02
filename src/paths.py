@@ -12,3 +12,8 @@ ERROR_FILE = OUTPUT_DIR / "ValidationError.csv"
 AIRPORT_MASTER_FILE = MASTER_DIR / "airportCodeMst.csv"
 AIRLINE_MASTER_FILE = MASTER_DIR / "airlineCodeMst.csv"
 ROUTE_MASTER_FILE = MASTER_DIR / "routeCodeMst.csv"
+ROUTE_ALIAS_FILE = MASTER_DIR / "routeAliasMst.csv"
+AIRPORT_ALIAS_FILE = MASTER_DIR / "airportAliasMst.csv"
+
+LOG_DIR = BASE_DIR / "Log"
+LOG_FILE = LOG_DIR / "AirlineProject.log"
