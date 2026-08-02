@@ -7,6 +7,7 @@ from src.master_data import (
     read_route_master,
     load_route_alias_dict,
     load_airport_alias_dict,
+    load_route_code_dict,
 )
 from src.validator import validate
 from src.paths import (
@@ -14,7 +15,9 @@ from src.paths import (
     OUTPUT_FILE,
     ERROR_FILE,
 )
-from src.normalize import normalize
+from src.normalize1 import normalize1
+from src.normalize2 import normalize2
+
 from src.logger import logger
 
 
@@ -29,7 +32,10 @@ def main():
     route_master = read_route_master()
     route_alias_dict = load_route_alias_dict()
     airport_alias_dict = load_airport_alias_dict()
+    route_code_dict = load_route_code_dict()
 
+    logger.info("ファイル正規化開始")
+    normalize1(df, airport_alias_dict)
     logger.info("ファイルチェック開始")
     errors = validate(df, airport_master, airline_master, route_master, route_alias_dict, airport_alias_dict)
     if errors:
@@ -40,8 +46,9 @@ def main():
         logger.info("ValidationError.csv を確認してください。")
 
         return
+    logger.info("ルートコード追加開始")
+    normalize2(df, route_alias_dict,route_code_dict)
     logger.info("CSV出力開始")
-    normalize(df, route_alias_dict, airport_alias_dict)
     export_csv(df, OUTPUT_FILE)
     logger.info("変換完了")
 
