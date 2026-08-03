@@ -1,25 +1,17 @@
-from src.reader import read_excel
-from src.exporter import export_csv
 from src.error_report import export_validation_errors
+from src.exporter import export_csv
+from src.logger import logger
 from src.master_data import (
-    read_airport_master,
-    read_airline_master,
-    read_route_master,
-    load_route_alias_dict,
     load_airport_alias_dict,
+    load_route_alias_dict,
     load_route_code_dict,
-)
-from src.validator import validate
-from src.paths import (
-    INPUT_FILE,
-    OUTPUT_FILE,
-    ERROR_FILE,
+    read_airline_master,
 )
 from src.normalize1 import normalize1
 from src.normalize2 import normalize2
-
-from src.logger import logger
-
+from src.paths import ERROR_FILE, INPUT_FILE, OUTPUT_FILE
+from src.reader import read_excel
+from src.validator import validate
 
 
 def main():
@@ -27,9 +19,9 @@ def main():
     logger.info("変換開始")
     df = read_excel(INPUT_FILE)
     logger.info("マスタファイルを読み込みます。")
+    # Validationで使用するDataFrame
     airline_master = read_airline_master()
-    airport_master = read_airport_master()
-    route_master = read_route_master()
+    # 高速検索用の辞書
     route_alias_dict = load_route_alias_dict()
     airport_alias_dict = load_airport_alias_dict()
     route_code_dict = load_route_code_dict()
@@ -37,7 +29,7 @@ def main():
     logger.info("ファイル正規化開始")
     normalize1(df, airport_alias_dict)
     logger.info("ファイルチェック開始")
-    errors = validate(df, airport_master, airline_master, route_master, route_alias_dict, airport_alias_dict)
+    errors = validate(df,  airline_master,  route_alias_dict, airport_alias_dict)
     if errors:
 
         export_validation_errors(errors, ERROR_FILE)
