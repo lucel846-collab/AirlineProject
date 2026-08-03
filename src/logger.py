@@ -1,4 +1,5 @@
 import logging
+
 from src.paths import LOG_FILE
 
 logging.basicConfig(
