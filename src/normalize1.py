@@ -8,4 +8,5 @@ def normalize1(df: pd.DataFrame,master: MasterData) -> None:
    # 空港コードをエイリアスから正規の空港コードに変換
     df["出発空港"] = df["出発空港"].map(master.get_airport_cd).fillna(df["出発空港"])
     df["到着空港"] = df["到着空港"].map(master.get_airport_cd).fillna(df["到着空港"])  
+    df["到着予定空港"] = df["到着予定空港"].map(master.get_airport_cd).fillna(df["到着予定空港"])  
     logger.info("ファイル正規化完了")
