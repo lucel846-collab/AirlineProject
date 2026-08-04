@@ -75,7 +75,12 @@ class MasterData:
         return self.airport_alias_dict.get(
             airport_alias, 
             None) 
-
+    def get_airline_name(self, airline_cd: str) -> str:
+        airline_row = self.airline_master[self.airline_master["AirlineCD"] == airline_cd]
+        if not airline_row.empty:
+            return airline_row.iloc[0]["AirlineName"]
+        return None
+    
     def exists_airline_code(self, airline_cd: str) -> bool:
         return airline_cd in self.airline_master["AirlineCD"].values
 
