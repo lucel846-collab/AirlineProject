@@ -1,11 +1,12 @@
 import pandas as pd
+from src.master_data import MasterData
 from src.validators.adderror import add_error
 
 
-def validate_airport_alias(df: pd.DataFrame, airport_alias_dict: dict[str, str], errors: list[dict[str, any]]) -> None:
+def validate_airport_alias(df: pd.DataFrame, master: MasterData, errors: list[dict[str, any]]) -> None:
     for column in ("出発空港", "到着空港"):
         for index, value in df[column].items():
-            if value not in airport_alias_dict:
+            if not master.exists_airport_alias(value):
                 add_error(
                     errors,
                     index,

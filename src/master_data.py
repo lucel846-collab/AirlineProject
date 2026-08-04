@@ -54,6 +54,34 @@ class MasterData:
     def load(self) -> None:
         logger.info("マスタファイルを読込")
         self.load_data()
+        logger.info("マスタファイルを読込完了")
         logger.info("辞書作成開始")
         self.create_dicts()
+        logger.info("辞書作成完了")
 
+    def get_route_code(self, airline_cd: str, airport_office: str, route_alias: str) -> str:
+        return self.route_alias_dict.get(
+            (airline_cd, 
+            airport_office,
+            route_alias), 
+            None)
+
+    def get_route_name(self, route_cd: str) -> str:
+        return self.route_code_dict.get(
+            route_cd, 
+            None)
+
+    def get_airport_cd(self, airport_alias: str) -> str:
+        return self.airport_alias_dict.get(
+            airport_alias, 
+            None) 
+
+    def exists_airline_code(self, airline_cd: str) -> bool:
+        return airline_cd in self.airline_master["AirlineCD"].values
+
+    def exists_airport_alias(self, airport_alias: str) -> bool:
+        return airport_alias in self.airport_alias_dict
+
+    def exists_route_alias(self, airline_cd: str, airport_office: str, route_alias: str) -> bool:
+        return (airline_cd, airport_office, route_alias) in self.route_alias_dict
+      

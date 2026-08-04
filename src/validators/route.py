@@ -1,8 +1,9 @@
 import pandas as pd
+from src.master_data import MasterData
 from src.validators.adderror import add_error
 
 
-def validate_route_alias(df: pd.DataFrame, route_alias_dict: dict[tuple[str, str, str], str], errors: list[dict[str, any]]) -> None:
+def validate_route_alias(df: pd.DataFrame, master: MasterData, errors: list[dict[str, any]]) -> None:
 
     for index, row in df.iterrows():
         key = (
@@ -10,7 +11,7 @@ def validate_route_alias(df: pd.DataFrame, route_alias_dict: dict[tuple[str, str
             row["事業所"],
             f"{row['出発空港']}{row['到着空港']}"
         )
-        if key not in route_alias_dict:
+        if not master.exists_route_alias(*key):
             add_error(
                 errors,
                 index,
