@@ -15,12 +15,8 @@ def main():
     df = read_excel(INPUT_FILE)
     master = MasterData()
     master.load() 
-    normalize1(df, master.airport_alias_dict)
-    errors = validate(df,  
-                      master.airline_master,  
-                      master.route_alias_dict, 
-                      master.airport_alias_dict
-                      )
+    normalize1(df, master)
+    errors = validate(df,master) 
     if errors:
 
         export_validation_errors(errors, ERROR_FILE)
@@ -29,10 +25,7 @@ def main():
         logger.info("ValidationError.csv を確認してください。")
 
         return
-    normalize2(df, 
-               master.route_alias_dict, 
-               master.route_code_dict
-               )
+    normalize2(df, master)
     export_csv(df, OUTPUT_FILE)
     logger.info("変換完了")
 
