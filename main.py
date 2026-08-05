@@ -1,11 +1,11 @@
-from src.error_report import export_validation_errors
 from src.exporter import export_csv
 from src.logger import logger
 from src.master_data import MasterData
 from src.normalizer import Normalizer
-from src.paths import ERROR_FILE, INPUT_FILE, OUTPUT_FILE
+from src.paths import INPUT_FILE, OUTPUT_FILE
 from src.reader import read_excel
 from src.validator import validate
+from src.validator_result import ValidationResult
 
 
 def main():
@@ -16,14 +16,10 @@ def main():
     master.load() 
     normalizer = Normalizer(master)
     normalizer.normalize_airport(df)
-    errors = validate(df,master) 
-    if errors:
-
-        export_validation_errors(errors, ERROR_FILE)
-
-        logger.error(f"{len(errors)}件のエラーがあります。")
-        logger.info("ValidationError.csv を確認してください。")
-
+    result = validate(df,master) 
+    if result.has_errors:
+        result.add_error()
+        result.export()
         return
     normalizer.add_airline_name(df)
     normalizer.add_route(df)

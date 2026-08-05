@@ -1,5 +1,5 @@
 import pandas as pd
-from src.validators.adderror import add_error
+from src.validator_result import ValidationResult
 
 # 運航区分
 VALID_OPERATION_TYPES = {
@@ -15,7 +15,7 @@ def validate_operation_type(df: pd.DataFrame, errors: list[dict[str, any]]) -> N
 
         if value not in VALID_OPERATION_TYPES:
 
-            add_error(
+            ValidationResult.add_error(
                 errors,
                 index,
                 "運航区分",
@@ -29,7 +29,7 @@ def validate_seat_count(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
 
         if row["座席数"] < row["旅客数"]:
 
-            add_error(
+            ValidationResult.add_error(
                 errors,
                 index,
                 "座席数",
@@ -45,7 +45,7 @@ def validate_dvt_arrival(df: pd.DataFrame, errors: list[dict[str, any]] ) -> Non
         if row["運航区分"] == "XD(DVT)" and (
             pd.isna(row["到着予定空港"]) or str(row["到着予定空港"]).strip() == ""
         ):
-            add_error(
+            ValidationResult.add_error(
                 errors,
                 index,
                 "到着予定空港",
@@ -66,7 +66,7 @@ def validate_cancelled_flights(df: pd.DataFrame, errors:list[dict[str, any]]) ->
         if row["便名"] in [ "CXL", "CNL"]:
             for col in CANCELLED_FLIGHT_CHECK_COLUMNS:
                 if row[col] !=0:
-                    add_error(
+                    ValidationResult.add_error(
                         errors,
                         index,
                         col,

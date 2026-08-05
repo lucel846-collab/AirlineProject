@@ -1,5 +1,5 @@
 import pandas as pd
-from src.validators.adderror import add_error
+from src.validator_result import ValidationResult
 
 # 必須列
 REQUIRED_COLUMNS = [
@@ -42,7 +42,7 @@ def validate_required(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
 
             if pd.isna(value) or str(value).strip() == "":
 
-                add_error(
+                ValidationResult.add_error(
                     errors,
                     index,
                     col,
@@ -58,7 +58,7 @@ def validate_numeric(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
 
             if not pd.isna(value) and not isinstance(value, (int, float)):
 
-                add_error(
+                ValidationResult.add_error(
                     errors,
                     index,
                     col,
@@ -71,7 +71,7 @@ def validate_airport_office(df: pd.DataFrame, errors: list[dict[str, any]]) -> N
 
         if value not in REQUIRED_AIRPORT_OFFICE:
 
-            add_error(
+            ValidationResult.add_error(
                 errors,
                 index,
                 "事業所",
