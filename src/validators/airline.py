@@ -3,15 +3,14 @@ from src.master_data import MasterData
 from src.validator_result import ValidationResult
 
 
-def validate_airline_code(df: pd.DataFrame, master: MasterData, errors: list[dict[str, any]]) -> None:
+def validate_airline_code(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
 
     for index, value in df["航空会社"].items():
         if not master.exists_airline_code(value):
-            ValidationResult.add_error(
-                errors,
-                index,
-                "航空会社",
-                value,
-                "航空会社コードがマスタに存在しません"
+            result.add_error(
+                index=index,
+                column="航空会社",
+                value=value,
+                message="航空会社コードがマスタに存在しません"
             )  
 

@@ -28,13 +28,18 @@ REQUIRED_AIRPORT_OFFICE = [
     "AKJ","CTS","MMB","OBO","WKJ","HKD","KUH"  
 ]
 
-def validate_columns(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
+def validate_columns(df: pd.DataFrame,result: ValidationResult) -> None:
 
     for col in REQUIRED_COLUMNS:
         if col not in df.columns:
-            errors.append({"行番号":"","項目名":col,"入力値":"","エラー内容":"列が存在しません"})
+            result.add_error(
+                index=None,
+                column=col,
+                value="",
+                message="列が存在しません"
+            )
  
-def validate_required(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
+def validate_required(df: pd.DataFrame, result: ValidationResult) -> None:
 
     for col in REQUIRED_COLUMNS:
 
@@ -42,15 +47,14 @@ def validate_required(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
 
             if pd.isna(value) or str(value).strip() == "":
 
-                ValidationResult.add_error(
-                    errors,
-                    index,
-                    col,
-                    value,
-                    "必須項目です"
+                result.add_error(
+                    index=index,
+                    column=col,
+                    value=value,
+                    message="必須項目です"
                 )
 
-def validate_numeric(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
+def validate_numeric(df: pd.DataFrame, result: ValidationResult) -> None:
 
     for col in REQUIRED_NUMERIC:
 
@@ -58,24 +62,22 @@ def validate_numeric(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
 
             if not pd.isna(value) and not isinstance(value, (int, float)):
 
-                ValidationResult.add_error(
-                    errors,
-                    index,
-                    col,
-                    value,
-                    "数値である必要があります"
+                result.add_error(
+                    index=index,
+                    column=col,
+                    value=value,
+                    message="数値である必要があります"
                 )
-def validate_airport_office(df: pd.DataFrame, errors: list[dict[str, any]]) -> None:
+def validate_airport_office(df: pd.DataFrame, result: ValidationResult) -> None:
 
     for index, value in df["事業所"].items():
 
         if value not in REQUIRED_AIRPORT_OFFICE:
 
-            ValidationResult.add_error(
-                errors,
-                index,
-                "事業所",
-                value,
-                "事業所コードが不正です"
+            result.add_error(
+                index=index,
+                column="事業所",
+                value=value,
+                message="事業所コードが不正です"
             )
                             

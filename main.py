@@ -5,7 +5,6 @@ from src.normalizer import Normalizer
 from src.paths import INPUT_FILE, OUTPUT_FILE
 from src.reader import read_excel
 from src.validator import validate
-from src.validator_result import ValidationResult
 
 
 def main():
@@ -16,9 +15,8 @@ def main():
     master.load() 
     normalizer = Normalizer(master)
     normalizer.normalize_airport(df)
-    result = validate(df,master) 
+    result = validate(df, master)
     if result.has_errors:
-        result.add_error()
         result.export()
         return
     normalizer.add_airline_name(df)
