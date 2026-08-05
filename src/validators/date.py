@@ -1,5 +1,5 @@
 import pandas as pd
-from src.validators.adderror import add_error
+from src.validator_result import ValidationResult
 
 
 def validate_previous_date_check(df: pd.DataFrame, errors:list[dict[str, any]]) -> None:
@@ -9,7 +9,7 @@ def validate_previous_date_check(df: pd.DataFrame, errors:list[dict[str, any]]) 
     first_date_prev_month = last_date_prev_month.replace(day=1)
     for index,row in df.iterrows():
         if (row["運航日"] > last_date_prev_month or row["運航日"] < first_date_prev_month):
-            add_error(
+            ValidationResult.add_error(
                 errors,
                 index,
                 "運航日",
