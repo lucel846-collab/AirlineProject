@@ -1,8 +1,6 @@
 import pandas as pd
-
 from src.logger import logger
 from src.master_data import MasterData
-
 from src.validators.airline import validate_airline_code
 from src.validators.airport import validate_airport_alias
 from src.validators.date import validate_previous_date_check
