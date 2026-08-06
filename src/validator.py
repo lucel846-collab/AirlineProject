@@ -28,13 +28,13 @@ class Validator:
         result = ValidationResult() 
         logger.info("ファイルチェック開始")
 
-        self._validate_requires(df, result)
+        self._validate_required(df, result)
         self._validate_master(df, result)
-        self._business_logic(df, result)
-      
+        self._validate_business_rules(df, result)
+
         logger.info("ファイルチェック完了")
         return result
-    def _validate_requires(self, df: pd.DataFrame, result: ValidationResult) -> None:
+    def _validate_required(self, df: pd.DataFrame, result: ValidationResult) -> None:
         validate_required(df, result)
         validate_numeric(df, result)
         validate_columns(df, result)
@@ -45,7 +45,7 @@ class Validator:
         validate_route_alias(df, self.master, result)
         validate_airport_office(df, result)
 
-    def _business_logic(self, df: pd.DataFrame, result: ValidationResult) -> None:
+    def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
         validate_previous_date_check(df, result)
         validate_cancelled_flights(df, result)  
         validate_operation_attributes(df, result)

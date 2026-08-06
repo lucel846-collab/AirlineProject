@@ -7,27 +7,30 @@ from src.reader import read_excel
 from src.validator import Validator
 
 
-def main():
+class FlightConverter:
+    def __init__(self):
+        self.master = MasterData()
+        self.normalizer = Normalizer(self.master)
+        self.validator = Validator(self.master)
 
-    logger.info("変換開始")
-    df = read_excel(INPUT_FILE)
+    def run(self):
 
-    master = MasterData()
-    normalizer = Normalizer(master)
-    validator = Validator(master)
+        logger.info("▽変換開始▽")
+        df = read_excel(INPUT_FILE)
+    
+        self.master.load() 
+        self.normalizer.normalize_airport(df)
+        result = self.validator.validate(df)
+        if result.has_errors:
+            result.export()
+            return
+        self.normalizer.add_airline_name(df)
+        self.normalizer.add_route(df)
 
-    master.load() 
-    normalizer.normalize_airport(df)
-    result = validator.validate(df)
-    if result.has_errors:
-        result.export()
-        return
-    normalizer.add_airline_name(df)
-    normalizer.add_route(df)
-
-    export_csv(df, OUTPUT_FILE)
-    logger.info("変換完了")
+        export_csv(df, OUTPUT_FILE)
+        logger.info("△変換完了△")
 
   
 if __name__ == "__main__":
-    main()
+     FlightConverter().run()
+
