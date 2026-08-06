@@ -6,8 +6,17 @@ VALID_OPERATION_TYPES = {
     "SD(定期)",
     "XD(DVT)",
     "ND(CHRT)",
-    "ND(臨時)",
+    "XD(臨時)",
+    "ND(周遊)",
 }
+# 必須列名
+CANCELLED_FLIGHT_CHECK_COLUMNS = [
+    "座席数",
+    "旅客数",
+    "INF",
+    "貨物重量",
+    "メール重量",
+]
 
 def validate_operation_type(df: pd.DataFrame, result: ValidationResult) -> None:
 
@@ -36,7 +45,7 @@ def validate_seat_count(df: pd.DataFrame, result: ValidationResult) -> None:
             )
 
 
-def validate_dvt_arrival(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_operation_attributes(df: pd.DataFrame, result: ValidationResult) -> None:
 
     for index, row in df.iterrows():
 
@@ -50,15 +59,18 @@ def validate_dvt_arrival(df: pd.DataFrame, result: ValidationResult) -> None:
                 message="XD(DVT)では必須です"
             )
 
+        if row["運航区分"] == "ND(周遊)" and not(
+            pd.isna(row["出発空港"]) and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
+        ):
+            result.add_error(
+                index=index,
+                column="到着空港",
+                value=row["到着空港"],
+                message="ND(周遊)では到着空港と出発空港は同一です"
+            )
+
 def validate_cancelled_flights(df: pd.DataFrame, result: ValidationResult) -> None:
 
-    CANCELLED_FLIGHT_CHECK_COLUMNS = [
-    "座席数",
-    "旅客数",
-    "INF",
-    "貨物重量",
-    "メール重量",
-]
     for index,row in df.iterrows():
         if row["便名"] in [ "CXL", "CNL"]:
             for col in CANCELLED_FLIGHT_CHECK_COLUMNS:
