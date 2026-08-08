@@ -17,10 +17,10 @@ class MasterData:
         self.route_master: pd.DataFrame | None = None
         self.route_alias: pd.DataFrame | None = None
      
-        self.route_alias_dict: dict[tuple[str, str, str], str] = {}
-        self.route_code_dict: dict[str, str] = {}
         self.airline_name_dict: dict[str, str] = {}
         self.airport_alias_dict: dict[str, str] = {}
+        self.route_alias_dict: dict[tuple[str, str, str], str] = {}
+        self.route_code_dict: dict[str, str] = {}
 
     # Validationで使用するDataFrame
     def load_data(self) -> None:
@@ -99,4 +99,4 @@ class MasterData:
 
     def exists_airline_name(self, airline_name: str) -> bool:
         return airline_name in self.airline_name_dict
-
+    
