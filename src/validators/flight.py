@@ -1,4 +1,5 @@
 import pandas as pd
+from src.detect_layout import detect_layout
 from src.validator_result import ValidationResult
 
 # 運航区分
@@ -19,65 +20,73 @@ CANCELLED_FLIGHT_CHECK_COLUMNS = [
 ]
 
 def validate_operation_type(df: pd.DataFrame, result: ValidationResult) -> None:
+    layout = detect_layout(df)
+    if layout == "DAILY_FLIGHT":
 
-    for index, value in df["運航区分"].items():
+        for index, value in df["運航区分"].items():
 
-        if value not in VALID_OPERATION_TYPES:
+            if value not in VALID_OPERATION_TYPES:
 
-            result.add_error(
-                index=index,
-                column="運航区分",
-                value=value,
-                message="値が不正です"
-            )
+                result.add_error(
+                    index=index,
+                    column="運航区分",
+                    value=value,
+                    message="値が不正です"
+                )
 
 def validate_seat_count(df: pd.DataFrame, result: ValidationResult) -> None:
+    layout = detect_layout(df)
+    if layout == "DAILY_FLIGHT":
 
-    for index, row in df.iterrows():
+        for index, row in df.iterrows():
 
-        if row["座席数"] < row["旅客数"]:
+            if row["座席数"] < row["旅客数"]:
 
-            result.add_error(
-                index=index,
-                column="座席数",
-                value=row["座席数"],
-                message="旅客数以下です"
-            )
+                result.add_error(
+                    index=index,
+                    column="座席数",
+                    value=row["座席数"],
+                    message="旅客数以下です"
+                )
 
 
 def validate_operation_attributes(df: pd.DataFrame, result: ValidationResult) -> None:
+    layout = detect_layout(df)
+    if layout == "DAILY_FLIGHT":
 
-    for index, row in df.iterrows():
+        for index, row in df.iterrows():
 
-        if row["運航区分"] == "XD(DVT)" and (
-            pd.isna(row["到着予定空港"]) or str(row["到着予定空港"]).strip() == ""
-        ):
-            result.add_error(
-                index=index,
-                column="到着予定空港",
-                value=row["到着予定空港"],
-                message="XD(DVT)では必須です"
-            )
+            if row["運航区分"] == "XD(DVT)" and (
+                pd.isna(row["到着予定空港"]) or str(row["到着予定空港"]).strip() == ""
+            ):
+                result.add_error(
+                    index=index,
+                    column="到着予定空港",
+                    value=row["到着予定空港"],
+                    message="XD(DVT)では必須です"
+                )
 
-        if row["運航区分"] == "ND(周遊)" and not(
-            pd.isna(row["出発空港"]) and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
-        ):
-            result.add_error(
-                index=index,
-                column="到着空港",
-                value=row["到着空港"],
-                message="ND(周遊)では到着空港と出発空港は同一です"
-            )
+            if row["運航区分"] == "ND(周遊)" and not(
+                pd.isna(row["出発空港"]) and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
+            ):
+                result.add_error(
+                    index=index,
+                    column="到着空港",
+                    value=row["到着空港"],
+                    message="ND(周遊)では到着空港と出発空港は同一です"
+                )
 
 def validate_cancelled_flights(df: pd.DataFrame, result: ValidationResult) -> None:
+    layout = detect_layout(df)
+    if layout == "DAILY_FLIGHT":
 
-    for index,row in df.iterrows():
-        if row["便名"] in [ "CXL", "CNL"]:
-            for col in CANCELLED_FLIGHT_CHECK_COLUMNS:
-                if row[col] !=0:
-                    result.add_error(
-                        index=index,
-                        column=col,
-                        value=row[col],
-                        message="CXL/CNLの場合は0である必要があります。"
-                    )
+        for index,row in df.iterrows():
+            if row["便名"] in [ "CXL", "CNL"]:
+                for col in CANCELLED_FLIGHT_CHECK_COLUMNS:
+                    if row[col] !=0:
+                        result.add_error(
+                            index=index,
+                            column=col,
+                            value=row[col],
+                            message="CXL/CNLの場合は0である必要があります。"
+                        )
