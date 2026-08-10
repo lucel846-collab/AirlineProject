@@ -13,3 +13,14 @@ def validate_airport_alias(df: pd.DataFrame, master: MasterData, result: Validat
                     value=value,
                     message=f"{column}コードがエイリアスマスタに存在しません"
                 )
+
+def validate_airport_office(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
+    for index, value in df["事業所"].items():
+        if not pd.isna(value) and value != "" and not master.exists_airport_office(value):
+            result.add_error(
+                index=index,
+                column="事業所",
+                value=value,
+                message="事業所コードが不正です"
+            )
+

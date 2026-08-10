@@ -63,7 +63,7 @@ class Normalizer_Monthly:
         df["路線名"] = df["路線CD"].map(self.master.get_route_name)
         logger.info("路線コード・路線名追加完了")
 
-class Normalizer_Daily_route:
+class Normalizer_Daily_Route:
 
     def __init__(self, master: MasterData):
         self.master = master

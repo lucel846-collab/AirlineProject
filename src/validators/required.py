@@ -73,10 +73,6 @@ REQUIRED_NUMERIC3 = [
     "メール重量"
 ]
 
-REQUIRED_AIRPORT_OFFICE = [
-    "AKJ","CTS","MMB","OBO","WKJ","HKD","KUH"  
-]
-
 def validate_columns_daily(df: pd.DataFrame,result: ValidationResult) -> None:
 
     required_columns = REQUIRED_COLUMNS1
@@ -175,18 +171,3 @@ def validate_numeric_daily_route(df: pd.DataFrame, result: ValidationResult) -> 
                     value=value,
                     message="数値である必要があります"
                 )
-
-
-def validate_airport_office(df: pd.DataFrame, result: ValidationResult) -> None:
-
-    for index, value in df["事業所"].items():
-
-        if value not in REQUIRED_AIRPORT_OFFICE:
-
-            result.add_error(
-                index=index,
-                column="事業所",
-                value=value,
-                message="事業所コードが不正です"
-            )
-                            

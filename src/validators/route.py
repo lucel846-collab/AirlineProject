@@ -3,7 +3,7 @@ from src.master_data import MasterData
 from src.validator_result import ValidationResult
 
 
-def validate_route_alias_daily(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
+def validate_route_alias_routecode(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
     for index, row in df.iterrows():
         key = (
             row["航空会社"],
@@ -18,7 +18,7 @@ def validate_route_alias_daily(df: pd.DataFrame, master: MasterData,result: Vali
                 message="路線コードがエイリアスマスタに存在しません"
             )
 
-def validate_route_alias_monthly(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
+def validate_route_alias_routename(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
     for index, row in df.iterrows():
         key = (
             row["航空会社"],

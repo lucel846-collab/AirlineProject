@@ -10,7 +10,7 @@ class Layout_type(Enum):
     UNKNOWN = "UNKNOWN"
 
 
-def detect_layout(df: pd.DataFrame) -> str:
+def detect_layout(df: pd.DataFrame) -> Layout_type:
     #データフレームのカラム名からレイアウトを判定する関数
     LAYOUT1_COLUMNS = [
         "運航日",
@@ -39,3 +39,4 @@ def detect_layout(df: pd.DataFrame) -> str:
         return Layout_type.DAILY_ROUTE.value
     else:
         return Layout_type.UNKNOWN.value
+        

@@ -4,6 +4,7 @@ from src.paths import (
     AIRLINE_MASTER_FILE,
     AIRPORT_ALIAS_FILE,
     AIRPORT_MASTER_FILE,
+    AIRPORT_OFFICE_FILE,
     ROUTE_ALIAS_FILE,
     ROUTE_MASTER_FILE,
 )
@@ -14,22 +15,24 @@ class MasterData:
         self.airline_master: pd.DataFrame | None = None
         self.airport_alias: pd.DataFrame | None = None
         self.airport_master: pd.DataFrame | None = None
-        self.route_master: pd.DataFrame | None = None
+        self.airport_Office: pd.DataFrame | None = None
         self.route_alias: pd.DataFrame | None = None
+        self.route_master: pd.DataFrame | None = None
      
-        self.airline_name_dict: dict[str, str] = {}
         self.airport_alias_dict: dict[str, str] = {}
+        self.airline_name_dict: dict[str, str] = {}
+        self.airport_Office_dict: dict[str, str] = {}
         self.route_alias_dict: dict[tuple[str, str, str], str] = {}
         self.route_code_dict: dict[str, str] = {}
 
     # Validationで使用するDataFrame
     def load_data(self) -> None:
         self.airline_master: pd.DataFrame = pd.read_csv(AIRLINE_MASTER_FILE)
-        self.airport_master: pd.DataFrame = pd.read_csv(AIRPORT_MASTER_FILE)
-        self.route_master: pd.DataFrame = pd.read_csv(ROUTE_MASTER_FILE)
-        self.route_alias: pd.DataFrame = pd.read_csv(ROUTE_ALIAS_FILE)
         self.airport_alias: pd.DataFrame = pd.read_csv(AIRPORT_ALIAS_FILE)
-
+        self.airport_master: pd.DataFrame = pd.read_csv(AIRPORT_MASTER_FILE)
+        self.airport_Office: pd.DataFrame= pd.read_csv(AIRPORT_OFFICE_FILE)
+        self.route_alias: pd.DataFrame = pd.read_csv(ROUTE_ALIAS_FILE)
+        self.route_master: pd.DataFrame = pd.read_csv(ROUTE_MASTER_FILE)
     # 高速検索用の辞書
     def create_dicts(self) -> None:
         self.airline_name_dict: dict[str, str] = {
@@ -54,6 +57,10 @@ class MasterData:
         self.airport_alias_dict: dict[str, str] = {
             row["AirportAlias"]: row["AirportCD"]
             for _, row in self.airport_alias.iterrows()
+        }    
+        self.airport_office_dict: dict[str, str] = {
+            row["AirportOffice"]: row["AirportOfficeName"]
+            for _, row in self.airport_Office.iterrows()
         }    
 
     # mainで使用する関数
@@ -82,11 +89,15 @@ class MasterData:
         return self.airport_alias_dict.get(
             airport_alias, 
             None) 
-    def get_airline_name(self, airline_cd: str) -> str | None:
+    
+    def get_airline_name(self, airline_cd: str) -> str | None:        
         return self.airline_name_dict.get(airline_cd, None)
 
     def get_airport_name(self, airport_cd: str) -> str | None:
         return self.airport_name_dict.get(airport_cd, None)
+
+    def get_airport_office_name(self, airport_office_cd: str) -> str | None:
+        return self.airport_office_dict.get(airport_office_cd, None)
 
     def exists_airline_code(self, airline_cd: str) -> bool:
         return airline_cd in self.airline_name_dict
@@ -100,3 +111,5 @@ class MasterData:
     def exists_airline_name(self, airline_name: str) -> bool:
         return airline_name in self.airline_name_dict
     
+    def exists_airport_office(self, airport_office_cd: str) -> bool:
+        return airport_office_cd in self.airport_office_dict
