@@ -1,10 +1,8 @@
 from pathlib import Path
 
 import pandas as pd
-
 from src.detect_layout import Layout_type
 from src.logger import logger
-
 
 REINDEXED_COLUMNS1 = [
     "運航区分",
@@ -57,6 +55,8 @@ REINDEXED_COLUMNS3 = [
     "メール重量",
     "事業所",
 ]
+
+
 
 def export_csv(df, path: Path,layout:str) -> pd.DataFrame:
     logger.info("CSV出力開始")
