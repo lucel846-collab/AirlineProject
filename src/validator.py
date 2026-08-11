@@ -7,9 +7,14 @@ from src.validators.airport import (
     validate_airport_alias,
     validate_airport_office,
 )
+from src.validators.colums import (
+    validate_columns_daily,
+    validate_columns_daily_route,
+    validate_columns_monthly,
+)
 from src.validators.date import (
-    validate_previous_date_check_daily,
-    validate_previous_date_check_monthly,
+    validate_previous_date_check_daytype,
+    validate_previous_date_check_monthtype,
 )
 from src.validators.flight import (
     validate_cancelled_flights,
@@ -17,13 +22,12 @@ from src.validators.flight import (
     validate_operation_type,
     validate_seat_count,
 )
-from src.validators.required import (
-    validate_columns_daily,
-    validate_columns_daily_route,
-    validate_columns_monthly,
+from src.validators.numeric import (
     validate_numeric_daily,
     validate_numeric_daily_route,
     validate_numeric_monthly,
+)
+from src.validators.required import (
     validate_required_daily,
     validate_required_daily_route,
     validate_required_monthly,
@@ -79,7 +83,7 @@ class Validator_Daily:
         validate_route_alias_routecode(df, self.master, result)         #D
 
     def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_previous_date_check_daily(df, result)              #D
+        validate_previous_date_check_daytype(df, result)              #D
         validate_cancelled_flights(df, result)                      #D 
         validate_operation_attributes(df, result)                   #D
 
@@ -106,7 +110,7 @@ class Validator_Monthly:
         validate_route_alias_routename(df, self.master, result)       #M
 
     def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_previous_date_check_monthly(df, result)            #M
+        validate_previous_date_check_monthtype(df, result)            #M
 
 class Validator_Daily_Route:
     def __init__(self, master: MasterData):
@@ -131,5 +135,5 @@ class Validator_Daily_Route:
         validate_route_alias_routename(df, self.master, result)       #M
     
     def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_previous_date_check_daily(df, result)              #D
+        validate_previous_date_check_daytype(df, result)              #D
     

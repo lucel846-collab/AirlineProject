@@ -96,9 +96,6 @@ class MasterData:
     def get_airline_name(self, airline_cd: str) -> str | None:        
         return self.airline_name_dict.get(airline_cd, None)
 
-    def get_airport_name(self, airport_cd: str) -> str | None:
-        return self.airport_name_dict.get(airport_cd, None)
-
     def get_airport_office_name(self, airport_office_cd: str) -> str | None:
         return self.airport_office_dict.get(airport_office_cd, None)
 
