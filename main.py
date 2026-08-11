@@ -26,6 +26,8 @@ class FlightConverter:
         self.master.load() 
         file_paths = glob.glob(f"{INPUT_DIR}/*.xlsx")
         for file_path in file_paths:
+            fbasename = os.path.basename(file_path)
+            logger.info(f"処理ファイル: {fbasename}")
             df = read_excel(file_path)
             layout =detect_layout(df)
             handler =handlers.get(layout)
@@ -39,8 +41,8 @@ class FlightConverter:
                 result.export()
                 continue
             
-            file_out_path = OUTPUT_DIR / os.path.basename(file_path).replace(".xlsx", ".csv")
-            export_csv(df, file_out_path)   
+            file_out_path = OUTPUT_DIR / fbasename.replace(".xlsx", ".csv")
+            export_csv(df, file_out_path,layout)   
         logger.info("△変換完了△")
   
 if __name__ == "__main__":

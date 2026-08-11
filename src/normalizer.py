@@ -32,7 +32,14 @@ class Normalizer_Daily:
             axis=1
         )
 
-        df["路線名"] = df["路線CD"].map(self.master.get_route_name)
+        df["路線名"] = df.apply(
+            lambda row:self.master.get_route_name(
+                row["路線CD"], 
+                row["事業所"]
+            ),
+            axis=1
+        )
+            
         logger.info("路線コード・路線名追加完了")
 
 class Normalizer_Monthly:
@@ -60,7 +67,13 @@ class Normalizer_Monthly:
             axis=1
         )
 
-        df["路線名"] = df["路線CD"].map(self.master.get_route_name)
+        df["路線名"] = df.apply(
+            lambda row:self.master.get_route_name(
+                row["路線CD"], 
+                row["事業所"]
+            ),
+            axis=1
+        )
         logger.info("路線コード・路線名追加完了")
 
 class Normalizer_Daily_Route:
@@ -88,7 +101,13 @@ class Normalizer_Daily_Route:
             axis=1
         )
 
-        df["路線名"] = df["路線CD"].map(self.master.get_route_name)
+        df["路線名"] = df.apply(
+            lambda row:self.master.get_route_name(
+                row["路線CD"], 
+                row["事業所"]
+            ),
+            axis=1
+        )
         logger.info("路線コード・路線名追加完了")
 
 

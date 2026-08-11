@@ -49,8 +49,11 @@ class MasterData:
             for _, row in self.route_alias.iterrows()
         }
 
-        self.route_code_dict: dict[str, str] = {
-            row["RouteCD"]: row["RouteName"]
+        self.route_name_dict: dict[tuple[str, str], str] = {
+            (
+            row["RouteCD"],
+            row["AirportOffice"]
+            ): row["RouteName"]
             for _, row in self.route_master.iterrows()
         }
 
@@ -80,9 +83,9 @@ class MasterData:
             None)
 
     # Validationで使用する関数
-    def get_route_name(self, route_cd: str) -> str  | None:
-        return self.route_code_dict.get(
-            route_cd, 
+    def get_route_name(self, route_cd: str,AirportOffice:str) -> str  | None:
+        return self.route_name_dict.get(
+            (route_cd, AirportOffice),
             None)
 
     def get_airport_cd(self, airport_alias: str) -> str | None:
