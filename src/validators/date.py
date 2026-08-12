@@ -2,7 +2,7 @@ import pandas as pd
 from src.validator_result import ValidationResult
 
 
-def validate_previous_date_check_daytype(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     today = pd.Timestamp.today().normalize()
     first_date = today.replace(day=1)
     last_date_prev_month = first_date - pd.Timedelta(days=1)
@@ -16,7 +16,7 @@ def validate_previous_date_check_daytype(df: pd.DataFrame, result: ValidationRes
                 message="運航日は前月である必要があります。"
         )
 
-def validate_previous_date_check_monthtype(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_previous_date_check_monthtype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     today = pd.Timestamp.today().normalize()
     first_date = today.replace(day=1)
     last_date_prev_month = first_date - pd.Timedelta(days=1)

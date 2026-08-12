@@ -52,7 +52,7 @@ LAYOUT_COLUMNS3 = [
     "事業所",
 ]
 
-def validate_columns_daily(df: pd.DataFrame,result: ValidationResult) -> None:
+def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) -> None:
 
     required_columns = LAYOUT_COLUMNS1
     for col in required_columns:
@@ -64,7 +64,7 @@ def validate_columns_daily(df: pd.DataFrame,result: ValidationResult) -> None:
                 message="列が存在しません"
             )
 
-def validate_columns_monthly(df: pd.DataFrame,result: ValidationResult) -> None:
+def validate_columns_monthly(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     required_columns = LAYOUT_COLUMNS2
     for col in required_columns:
         if col not in df.columns:
@@ -75,7 +75,7 @@ def validate_columns_monthly(df: pd.DataFrame,result: ValidationResult) -> None:
                 message="列が存在しません"
             )
 
-def validate_columns_daily_route(df: pd.DataFrame,result: ValidationResult) -> None:
+def validate_columns_daily_route(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     required_columns = LAYOUT_COLUMNS3
     for col in required_columns:
         if col not in df.columns:

@@ -26,7 +26,7 @@ REQUIRED_NUMERIC3 = [
     "貨物重量",
     "メール重量"
 ]
-def validate_numeric_daily(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_NUMERIC1:
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
@@ -45,7 +45,7 @@ def validate_numeric_daily(df: pd.DataFrame, result: ValidationResult) -> None:
                 )
 
 
-def validate_numeric_monthly(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_numeric_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_NUMERIC2:
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
@@ -63,7 +63,7 @@ def validate_numeric_monthly(df: pd.DataFrame, result: ValidationResult) -> None
                     message="正数値の必要があります"
                 )
 
-def validate_numeric_daily_route(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_NUMERIC3:
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):

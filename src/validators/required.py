@@ -49,7 +49,7 @@ REQUIRED_COLUMNS3 = [
 
 
 
-def validate_required_daily(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_COLUMNS1:
         for index, value in df[col].items():
             if pd.isna(value) or str(value).strip() == "":
@@ -59,7 +59,7 @@ def validate_required_daily(df: pd.DataFrame, result: ValidationResult) -> None:
                     value=value,
                     message="必須項目です"
                 )
-def validate_required_monthly(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_required_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_COLUMNS2:
             for index, value in df[col].items():
                 if pd.isna(value) or str(value).strip() == "":
@@ -70,7 +70,7 @@ def validate_required_monthly(df: pd.DataFrame, result: ValidationResult) -> Non
                         message="必須項目です"
                     )
     
-def validate_required_daily_route(df: pd.DataFrame, result: ValidationResult) -> None:
+def validate_required_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_COLUMNS3:
             for index, value in df[col].items():
                 if pd.isna(value) or str(value).strip() == "":

@@ -1,6 +1,4 @@
-import pandas as pd
 from src.logger import logger
-from src.master_data import MasterData
 from src.validator_result import ValidationResult
 from src.validators.airline import validate_airline_code
 from src.validators.airport import (
@@ -38,102 +36,86 @@ from src.validators.route import (
 )
 
 
-class Validator_Common:
-    def __init__(self, master: MasterData):
-        self.master = master
-    def validate(self, df: pd.DataFrame) -> ValidationResult:
-        result = ValidationResult() 
-        logger.info("共通ファイルチェック開始")
+class BaseValidator:
+    required_checks = ()
+    master_checks = ()
+    business_rule_checks = ()
+    log_name = "検証"
 
-        self._validate_master(df, result)
-        self._validate_business_rules(df, result)
-
-        logger.info("共通ファイルチェック完了")
-        return result
-    def _validate_master(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_airline_code(df, self.master, result)              #C
-        validate_airport_office(df, self.master,result)                         #C
-
-    def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_operation_type(df, result)                         #C
-        validate_seat_count(df, result)                             #C
-
-
-class Validator_Daily:
-    def __init__(self, master: MasterData):
+    def __init__(self, master ):
         self.master = master
 
-    def validate(self, df: pd.DataFrame) -> ValidationResult:
-        result = ValidationResult() 
-        logger.info("DAILYファイルチェック開始")
+    def validate(self, df):
+        result = ValidationResult()
 
-        self._validate_required(df, result)
-        self._validate_master(df, result)
-        self._validate_business_rules(df, result)
+        logger.info(f"{self.log_name}開始")
 
-        logger.info("DAILYファイルチェック完了")
+        self._run_checks(self.required_checks, df, result)
+        self._run_checks(self.master_checks, df, result)
+        self._run_checks(self.business_rule_checks, df, result)
+
+        logger.info(f"{self.log_name}完了")
+
         return result
-    def _validate_required(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_required_daily(df, result)                         #D
-        validate_numeric_daily(df, result)                          #D
-        validate_columns_daily(df, result)                          #D
 
-    def _validate_master(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_airport_alias(df, self.master, result)             #D
-        validate_route_alias_routecode(df, self.master, result)         #D
+    def _run_checks(self, checks, df, result):
+        for check in checks:
+            check(df, self.master, result)
 
-    def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_previous_date_check_daytype(df, result)              #D
-        validate_cancelled_flights(df, result)                      #D 
-        validate_operation_attributes(df, result)                   #D
+class CommonValidator(BaseValidator):
+    log_name ="共通ファイルチェック"
+    master_checks = (
+        validate_airline_code,
+        validate_airport_office,
+    )
+    business_rule_checks = (
+        validate_operation_type,
+        validate_seat_count,
+    )
 
-class Validator_Monthly:
-    def __init__(self, master: MasterData):
-        self.master = master
+class DailyValidator(BaseValidator):
+    log_name ="DAILYファイルチェック"
+    required_checks = (
+        validate_required_daily,
+        validate_numeric_daily,
+        validate_columns_daily,
+    )
+    master_checks = (
+        validate_airport_alias,
+        validate_route_alias_routecode,
+    )
+    business_rule_checks = (
+        validate_previous_date_check_daytype,
+        validate_cancelled_flights,
+        validate_operation_attributes,
+    )
 
-    def validate(self, df: pd.DataFrame) -> ValidationResult:
-        result = ValidationResult() 
-        logger.info("Monthlyファイルチェック開始")
 
-        self._validate_required(df, result)
-        self._validate_master(df, result)
-        self._validate_business_rules(df, result)
+class MonthlyValidator(BaseValidator):
+    log_name ="Monthlyファイルチェック"
+    required_checks = (
+        validate_required_monthly,
+        validate_numeric_monthly,
+        validate_columns_monthly,
+    )
+    master_checks = (
+        validate_route_alias_routename,
+    )
+    business_rule_checks = (
+        validate_previous_date_check_monthtype,
+    )
 
-        logger.info("Monthlyファイルチェック完了")
-        return result
-    def _validate_required(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_required_monthly(df, result)                       #M
-        validate_numeric_monthly(df, result)                        #M
-        validate_columns_monthly(df, result)                        #M
+class DailyRouteValidator(BaseValidator):
+    log_name ="Daily_routeファイルチェック"
+    required_checks = (
+        validate_required_daily_route,
+        validate_numeric_daily_route,
+        validate_columns_daily_route,
+    )
+    master_checks = (
+        validate_route_alias_routename,
+    )
+    business_rule_checks = (
+        validate_previous_date_check_daytype,
+    )
 
-    def _validate_master(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_route_alias_routename(df, self.master, result)       #M
-
-    def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_previous_date_check_monthtype(df, result)            #M
-
-class Validator_Daily_Route:
-    def __init__(self, master: MasterData):
-        self.master = master
-
-    def validate(self, df: pd.DataFrame) -> ValidationResult:
-        result = ValidationResult() 
-        logger.info("Daily_routeファイルチェック開始")
-
-        self._validate_required(df, result)
-        self._validate_master(df, result)
-        self._validate_business_rules(df, result)
-
-        logger.info("Daily_routeファイルチェック完了")
-        return result
-    def _validate_required(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_required_daily_route(df, result)                   #R
-        validate_numeric_daily_route(df, result)                    #R
-        validate_columns_daily_route(df, result)                    #R
-
-    def _validate_master(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_route_alias_routename(df, self.master, result)       #M
-    
-    def _validate_business_rules(self, df: pd.DataFrame, result: ValidationResult) -> None:
-        validate_previous_date_check_daytype(df, result)              #D
-    
