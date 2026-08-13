@@ -12,6 +12,7 @@ def validate_route_alias_routecode(df: pd.DataFrame, master: MasterData,result: 
             )
         if not master.exists_route_alias(*key):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="路線コード",
                 value=f"{row['航空会社']}-{row['事業所']}-{row['出発空港']}{row['到着空港']}",
@@ -27,6 +28,7 @@ def validate_route_alias_routename(df: pd.DataFrame, master: MasterData,result: 
             )
         if not master.exists_route_alias(*key):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="路線コード",
                 value=f"{row['航空会社']}-{row['事業所']}-{row['路線名']}",

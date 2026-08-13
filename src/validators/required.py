@@ -54,6 +54,7 @@ def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) 
         for index, value in df[col].items():
             if pd.isna(value) or str(value).strip() == "":
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
@@ -64,6 +65,7 @@ def validate_required_monthly(df: pd.DataFrame,_master, result: ValidationResult
             for index, value in df[col].items():
                 if pd.isna(value) or str(value).strip() == "":
                     result.add_error(
+                        filenm=df.attrs.get("filename"),
                         index=index,
                         column=col,
                         value=value,
@@ -75,6 +77,7 @@ def validate_required_daily_route(df: pd.DataFrame,_master, result: ValidationRe
             for index, value in df[col].items():
                 if pd.isna(value) or str(value).strip() == "":
                     result.add_error(
+                        filenm=df.attrs.get("filename"), 
                         index=index,
                         column=col,
                         value=value,

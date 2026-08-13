@@ -10,6 +10,7 @@ def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: Valid
     for index,row in df.iterrows():
         if (row["運航日"] > last_date_prev_month or row["運航日"] < first_date_prev_month):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="運航日",
                 value=row["運航日"],
@@ -24,6 +25,7 @@ def validate_previous_date_check_monthtype(df: pd.DataFrame,_master, result: Val
     for index,row in df.iterrows():
         if ( row["年月"] != first_date_prev_month):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="年月",
                 value=row["年月"],

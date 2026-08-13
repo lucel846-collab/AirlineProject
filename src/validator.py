@@ -76,9 +76,9 @@ class CommonValidator(BaseValidator):
 class DailyValidator(BaseValidator):
     log_name ="DAILYファイルチェック"
     required_checks = (
+        validate_columns_daily,
         validate_required_daily,
         validate_numeric_daily,
-        validate_columns_daily,
     )
     master_checks = (
         validate_airport_alias,
@@ -94,9 +94,9 @@ class DailyValidator(BaseValidator):
 class MonthlyValidator(BaseValidator):
     log_name ="Monthlyファイルチェック"
     required_checks = (
+        validate_columns_monthly,
         validate_required_monthly,
         validate_numeric_monthly,
-        validate_columns_monthly,
     )
     master_checks = (
         validate_route_alias_routename,
@@ -108,9 +108,9 @@ class MonthlyValidator(BaseValidator):
 class DailyRouteValidator(BaseValidator):
     log_name ="Daily_routeファイルチェック"
     required_checks = (
+        validate_columns_daily_route,
         validate_required_daily_route,
         validate_numeric_daily_route,
-        validate_columns_daily_route,
     )
     master_checks = (
         validate_route_alias_routename,

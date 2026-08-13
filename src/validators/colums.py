@@ -58,6 +58,7 @@ def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) ->
     for col in required_columns:
         if col not in df.columns:
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=None,
                 column=col,
                 value="",
@@ -69,6 +70,7 @@ def validate_columns_monthly(df: pd.DataFrame,_master,result: ValidationResult) 
     for col in required_columns:
         if col not in df.columns:
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=None,
                 column=col,
                 value="",
@@ -80,6 +82,7 @@ def validate_columns_daily_route(df: pd.DataFrame,_master,result: ValidationResu
     for col in required_columns:
         if col not in df.columns:
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=None,
                 column=col,
                 value="",

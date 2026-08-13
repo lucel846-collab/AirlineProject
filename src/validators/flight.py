@@ -25,6 +25,7 @@ def validate_operation_type(df: pd.DataFrame, _master,result: ValidationResult) 
     for index, value in df["運航区分"].items():
         if value not in VALID_OPERATION_TYPES:
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="運航区分",
                 value=value,
@@ -33,13 +34,14 @@ def validate_operation_type(df: pd.DataFrame, _master,result: ValidationResult) 
 
 def validate_seat_count(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for index, row in df.iterrows():
-        if row["座席数"] < row["旅客数"]:
-            result.add_error(
-                index=index,
-                column="座席数",
-                value=row["座席数"],
-                message="旅客数以下です"
-            )
+        if isinstance(row["座席数"], (int, float)) and isinstance(row["旅客数"], (int, float)) and row["座席数"] < row["旅客数"]:
+                result.add_error(
+                    filenm=df.attrs.get("filename"),
+                    index=index,
+                    column="座席数",
+                    value=row["座席数"],
+                    message="旅客数以下です"
+                )
 
 
 def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationResult) -> None:
@@ -49,6 +51,7 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
             pd.isna(row["到着予定空港"]) or str(row["到着予定空港"]).strip() == ""
         ):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="到着予定空港",
                 value=row["到着予定空港"],
@@ -59,6 +62,7 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
             pd.isna(row["出発空港"]) and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
         ):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="到着空港",
                 value=row["到着空港"],
@@ -71,6 +75,7 @@ def validate_cancelled_flights(df: pd.DataFrame,_master, result: ValidationResul
             for col in CANCELLED_FLIGHT_CHECK_COLUMNS:
                 if row[col] !=0:
                     result.add_error(
+                        filenm=df.attrs.get("filename"),
                         index=index,
                         column=col,
                         value=row[col],

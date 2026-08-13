@@ -8,6 +8,7 @@ def validate_airline_code(df: pd.DataFrame, master: MasterData, result: Validati
     for index, value in df["航空会社"].items():
         if not master.exists_airline_code(value):
             result.add_error(
+                filenm=df.attrs.get("filename"),
                 index=index,
                 column="航空会社",
                 value=value,

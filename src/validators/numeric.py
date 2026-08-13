@@ -31,6 +31,7 @@ def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
@@ -38,6 +39,7 @@ def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -
                 )
             elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
@@ -50,6 +52,7 @@ def validate_numeric_monthly(df: pd.DataFrame,_master, result: ValidationResult)
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
@@ -57,6 +60,7 @@ def validate_numeric_monthly(df: pd.DataFrame,_master, result: ValidationResult)
                 )
             elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
@@ -68,6 +72,7 @@ def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationRes
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
@@ -75,6 +80,7 @@ def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationRes
                 )
             elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
+                    filenm=df.attrs.get("filename"),
                     index=index,
                     column=col,
                     value=value,
