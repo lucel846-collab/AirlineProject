@@ -36,7 +36,7 @@ def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -
                     value=value,
                     message="数値である必要があります"
                 )
-            if not pd.isna(value) and value < 0 :
+            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
                     index=index,
                     column=col,
@@ -55,7 +55,7 @@ def validate_numeric_monthly(df: pd.DataFrame,_master, result: ValidationResult)
                     value=value,
                     message="数値である必要があります"
                 )
-            if not pd.isna(value) and value < 0 :
+            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
                     index=index,
                     column=col,
@@ -73,7 +73,7 @@ def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationRes
                     value=value,
                     message="数値である必要があります"
                 )
-            if not pd.isna(value) and value < 0 :
+            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
                     index=index,
                     column=col,
