@@ -59,7 +59,7 @@ def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) ->
         if col not in df.columns:
             result.add_error(
                 filenm=df.attrs.get("filename"),
-                index=None,
+                index=0,
                 column=col,
                 value="",
                 message="列が存在しません"
@@ -71,7 +71,7 @@ def validate_columns_monthly(df: pd.DataFrame,_master,result: ValidationResult) 
         if col not in df.columns:
             result.add_error(
                 filenm=df.attrs.get("filename"),
-                index=None,
+                index=0,
                 column=col,
                 value="",
                 message="列が存在しません"
@@ -83,7 +83,7 @@ def validate_columns_daily_route(df: pd.DataFrame,_master,result: ValidationResu
         if col not in df.columns:
             result.add_error(
                 filenm=df.attrs.get("filename"),
-                index=None,
+                index=0,
                 column=col,
                 value="",
                 message="列が存在しません"

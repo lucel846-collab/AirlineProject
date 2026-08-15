@@ -30,7 +30,7 @@ def validate_route_alias_routename(df: pd.DataFrame, master: MasterData,result: 
             result.add_error(
                 filenm=df.attrs.get("filename"),
                 index=index,
-                column="路線コード",
+                column="路線名",
                 value=f"{row['航空会社']}-{row['事業所']}-{row['路線名']}",
                 message="路線コードがエイリアスマスタに存在しません"
             )

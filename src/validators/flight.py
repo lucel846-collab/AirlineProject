@@ -16,7 +16,7 @@ VALID_OPERATION_TYPES = {
 CANCELLED_FLIGHT_CHECK_COLUMNS = [
     "座席数",
     "旅客数",
-    "INF",
+    "INF数",
     "貨物重量",
     "メール重量",
 ]
@@ -55,11 +55,12 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
                 index=index,
                 column="到着予定空港",
                 value=row["到着予定空港"],
-                message="XD(DVT)では必須です"
+                message="XD(DVT)では「到着予定空港」が必須です"
             )
 
         if row["運航区分"] == "ND(周遊)" and not(
-            pd.isna(row["出発空港"]) and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
+            pd.isna(row["出発空港"]) and pd.isna(row["到着空港"]) 
+            and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
         ):
             result.add_error(
                 filenm=df.attrs.get("filename"),
