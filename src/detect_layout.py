@@ -7,6 +7,7 @@ class Layout_type(Enum):
     DAILY_FLIGHT = "DAILY_FLIGHT"
     MONTHLY_ROUTE = "MONTHLY_ROUTE"
     DAILY_ROUTE = "DAILY_ROUTE"
+    MONTHLY_CARGO = "MONTHLY_CARGO"
     UNKNOWN = "UNKNOWN"
 
 
@@ -30,6 +31,13 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         "路線名",
         "便数"]
 
+    LAYOUT4_COLUMNS = [
+        "年月",
+        "便名",
+        "出発空港",
+        "到着空港",
+        "便数"]
+
 
     if all(col in df.columns for col in LAYOUT1_COLUMNS):
         return Layout_type.DAILY_FLIGHT.value
@@ -37,6 +45,8 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         return Layout_type.MONTHLY_ROUTE.value
     elif all(col in df.columns for col in LAYOUT3_COLUMNS):
         return Layout_type.DAILY_ROUTE.value
+    elif all(col in df.columns for col in LAYOUT4_COLUMNS):
+        return Layout_type.MONTHLY_CARGO.value
     else:
         return Layout_type.UNKNOWN.value
         

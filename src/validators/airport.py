@@ -4,7 +4,7 @@ from src.validator_result import ValidationResult
 
 
 def validate_airport_alias(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
-    for column in ("出発空港", "到着空港", "到着予定空港"):
+    for column in ("出発空港", "到着空港"):
         for index, value in df[column].items():
             if not pd.isna(value) and value != "" and not master.exists_airport_alias(value):
                 result.add_error(
@@ -14,6 +14,16 @@ def validate_airport_alias(df: pd.DataFrame, master: MasterData, result: Validat
                     value=value,
                     message=f"{column}コードがエイリアスマスタに存在しません"
                 )
+def validate_airport_alias2(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
+    for index, value in df["到着予定空港"].items():
+        if not pd.isna(value) and value != "" and not master.exists_airport_alias(value):
+            result.add_error(
+                filenm=df.attrs.get("filename"),
+                index=index,
+                column="到着予定空港",
+                value=value,
+                message="到着予定空港コードがエイリアスマスタに存在しません"
+            )
 
 def validate_airport_office(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
     for index, value in df["事業所"].items():
