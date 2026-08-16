@@ -19,11 +19,13 @@ class MasterData:
         self.route_alias: pd.DataFrame | None = None
         self.route_master: pd.DataFrame | None = None
      
-        self.airport_alias_dict: dict[str, str] = {}
+        self.airport_code_dict: dict[str, str] = {}
+        self.airport_name_dict: dict[str, str] = {}
         self.airline_name_dict: dict[str, str] = {}
         self.airport_Office_dict: dict[str, str] = {}
-        self.route_alias_dict: dict[tuple[str, str, str], str] = {}
-        self.route_code_dict: dict[str, str] = {}
+        self.route_code_dict: dict[tuple[str, str, str], str] = {}
+
+     #   self.route_code_dict: dict[str, str] = {}
 
     # Validationで使用するDataFrame
     def load_data(self) -> None:
@@ -40,7 +42,12 @@ class MasterData:
             for _, row in self.airline_master.iterrows()
         }
 
-        self.route_alias_dict: dict[tuple[str, str, str], str] =  {
+        self.airport_name_dict: dict[str, str] = {
+            row["AirportCD"]: row["AirportName"]
+            for _, row in self.airport_master.iterrows()
+        }
+
+        self.route_code_dict: dict[tuple[str, str, str], str] =  {
             (
             row["AirlineCD"],
             row["AirportOffice"],
@@ -48,6 +55,16 @@ class MasterData:
             ): row["RouteCD"]
             for _, row in self.route_alias.iterrows()
         }
+
+        self.route_counter_dict: dict[tuple[str, str, str], str] =  {
+            (
+            row["AirlineCD"],
+            row["AirportOffice"],
+            row["RouteAlias"]
+            ): row["Counter"]
+            for _, row in self.route_alias.iterrows()
+        }
+
 
         self.route_name_dict: dict[tuple[str, str], str] = {
             (
@@ -57,7 +74,7 @@ class MasterData:
             for _, row in self.route_master.iterrows()
         }
 
-        self.airport_alias_dict: dict[str, str] = {
+        self.airport_code_dict: dict[str, str] = {
             row["AirportAlias"]: row["AirportCD"]
             for _, row in self.airport_alias.iterrows()
         }    
@@ -76,11 +93,25 @@ class MasterData:
         logger.info("辞書作成完了")
 
     def get_route_code(self, airline_cd: str, airport_office: str, route_alias: str) -> str | None:
-        return self.route_alias_dict.get(
+        return self.route_code_dict.get(
             (airline_cd, 
             airport_office,
             route_alias), 
             None)
+
+    def get_route_counter(self, airline_cd: str, airport_office: str, route_alias: str, route_direct : str) -> str | None:
+        counter_code= self.route_counter_dict.get(
+                    (airline_cd, 
+                    airport_office,
+                    route_alias), 
+                    None)
+        if counter_code is None:
+            return None
+        if route_direct == "出発":
+            return airport_office + counter_code
+        elif route_direct == "到着":
+            return counter_code + airport_office
+        return counter_code
 
     # Validationで使用する関数
     def get_route_name(self, route_cd: str,AirportOffice:str) -> str  | None:
@@ -89,10 +120,15 @@ class MasterData:
             None)
 
     def get_airport_cd(self, airport_alias: str) -> str | None:
-        return self.airport_alias_dict.get(
+        return self.airport_code_dict.get(
             airport_alias, 
             None) 
-    
+
+    def get_airport_name(self, airport_CD: str) -> str | None:
+        return self.airport_name_dict.get(
+            airport_CD, 
+            None) 
+
     def get_airline_name(self, airline_cd: str) -> str | None:        
         return self.airline_name_dict.get(airline_cd, None)
 
@@ -103,10 +139,10 @@ class MasterData:
         return airline_cd in self.airline_name_dict
 
     def exists_airport_alias(self, airport_alias: str) -> bool:
-        return airport_alias in self.airport_alias_dict
+        return airport_alias in self.airport_code_dict
 
     def exists_route_alias(self, airline_cd: str, airport_office: str, route_alias: str) -> bool:
-        return (airline_cd, airport_office, route_alias) in self.route_alias_dict
+        return (airline_cd, airport_office, route_alias) in self.route_code_dict
 
     def exists_airline_name(self, airline_name: str) -> bool:
         return airline_name in self.airline_name_dict

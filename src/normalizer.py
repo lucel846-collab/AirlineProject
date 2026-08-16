@@ -39,6 +39,8 @@ class DailyNormalizer:
             ),
             axis=1
         )
+
+        df["到着予定空港"] = df["到着予定空港"].map(self.master.airport_name_dict)
             
         logger.info("路線コード・路線名追加完了")
 
@@ -59,10 +61,11 @@ class MonthlyNormalizer:
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
         df["路線CD"] = df.apply(
-            lambda row: self.master.get_route_code(
+            lambda row: self.master.get_route_counter(
                 row["航空会社"],
                 row["事業所"],
-                row["路線名"]
+                row["路線名"],
+                row["発着区分"]
             ),
             axis=1
         )
