@@ -65,6 +65,19 @@ LAYOUT_COLUMNS4 = [
     "事業所",
 ]
 
+LAYOUT_COLUMNS5 = [
+    "運航区分",
+    "年月",
+    "航空会社",
+    "相手先空港",
+    "フレーター便数",
+    "積荷重量",
+    "卸荷重量",
+    "郵便積荷重量",
+    "郵便卸荷重量",
+    "事業所",
+]
+
 def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) -> None:
 
     required_columns = LAYOUT_COLUMNS1
@@ -113,4 +126,15 @@ def validate_columns_monthly_cargo(df: pd.DataFrame,_master,result: ValidationRe
                 value="",
                 message="列が存在しません"
             )
- 
+
+def validate_columns_foreign_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+    required_columns = LAYOUT_COLUMNS5
+    for col in required_columns:
+        if col not in df.columns:
+            result.add_error(
+                filenm=df.attrs.get("filename"),
+                index=0,
+                column=col,
+                value="",
+                message="列が存在しません"
+            )

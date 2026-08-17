@@ -33,6 +33,15 @@ REQUIRED_NUMERIC4 = [
     "メール重量"
 ]
 
+REQUIRED_NUMERIC5 = [
+    "フレーター便数",
+    "積荷重量",
+    "卸荷重量",
+    "郵便積荷重量",
+    "郵便卸荷重量"
+]
+
+
 def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_NUMERIC1:
         for index, value in df[col].items():
@@ -96,6 +105,26 @@ def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationRes
 
 def validate_numeric_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_NUMERIC4:
+        for index, value in df[col].items():
+            if not pd.isna(value) and not isinstance(value, (int, float)):
+                result.add_error(
+                    filenm=df.attrs.get("filename"),
+                    index=index,
+                    column=col,
+                    value=value,
+                    message="数値である必要があります"
+                )
+            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
+                result.add_error(
+                    filenm=df.attrs.get("filename"),
+                    index=index,
+                    column=col,
+                    value=value,
+                    message="正数値の必要があります"
+                )
+
+def validate_numeric_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    for col in REQUIRED_NUMERIC5:
         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
                 result.add_error(

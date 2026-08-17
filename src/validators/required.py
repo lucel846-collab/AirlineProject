@@ -60,6 +60,19 @@ REQUIRED_COLUMNS4 = [
     "事業所",
 ]
 
+REQUIRED_COLUMNS5 = [
+    "運航区分",
+    "年月",
+    "航空会社",
+    "相手先空港",
+    "フレーター便数",
+    "積荷重量",
+    "卸荷重量",
+    "郵便積荷重量",
+    "郵便卸荷重量",
+    "事業所",
+]
+
 
 def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_COLUMNS1:
@@ -98,6 +111,18 @@ def validate_required_daily_route(df: pd.DataFrame,_master, result: ValidationRe
     
 def validate_required_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for col in REQUIRED_COLUMNS4:
+            for index, value in df[col].items():
+                if pd.isna(value) or str(value).strip() == "":
+                    result.add_error(
+                        filenm=df.attrs.get("filename"), 
+                        index=index,
+                        column=col,
+                        value=value,
+                        message="必須項目です"
+                    )
+
+def validate_required_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    for col in REQUIRED_COLUMNS5:
             for index, value in df[col].items():
                 if pd.isna(value) or str(value).strip() == "":
                     result.add_error(

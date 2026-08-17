@@ -9,6 +9,7 @@ VALID_OPERATION_TYPES = {
     "XI(DVT)",
     "ND(CHRT)",
     "NI(CHRT)",
+    "NI(保税)",
     "XD(臨時)",
     "ND(周遊)",
 }
@@ -58,7 +59,7 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
                 message="XD(DVT)では「到着予定空港」が必須です"
             )
 
-        if row["運航区分"] == "ND(周遊)" and not(
+        elif row["運航区分"] == "ND(周遊)" and not(
             pd.isna(row["出発空港"]) and pd.isna(row["到着空港"]) 
             and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
         ):
@@ -69,6 +70,18 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
                 value=row["到着空港"],
                 message="ND(周遊)では到着空港と出発空港は同一です"
             )
+
+        elif row["運航区分"] == "NI(保全)" and not(
+            pd.isna(row["相手先空港"])  and  str(row["到着空港"]).strip() =="" 
+        ):
+            result.add_error(
+                filenm=df.attrs.get("filename"),
+                index=index,
+                column="相手先空港",
+                value=row["相手先空港"],
+                message="NI(保全)では相手先空港は記載不要です"
+            )
+
 
 def validate_cancelled_flights(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     for index,row in df.iterrows():

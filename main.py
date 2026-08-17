@@ -5,6 +5,7 @@ from src.detect_layout import Layout_type, detect_layout
 from src.exporter import export_csv
 from src.handlers.daily_flight import DailyFlightHandler
 from src.handlers.daily_route import DailyRouteHandler
+from src.handlers.foreign_cargo import ForeignCargoHandler
 from src.handlers.monthly_cargo import MonthlyCargoHandler
 from src.handlers.monthly_flight import MonthlyRouteHandler
 from src.logger import logger
@@ -23,6 +24,7 @@ class FlightConverter:
             Layout_type.MONTHLY_ROUTE.value: MonthlyRouteHandler(self.master),
             Layout_type.DAILY_ROUTE.value: DailyRouteHandler(self.master),
             Layout_type.MONTHLY_CARGO.value: MonthlyCargoHandler(self.master),
+            Layout_type.FOREIGN_CARGO.value: ForeignCargoHandler(self.master),
             }
         logger.info("▽変換開始▽")
         self.master.load() 
