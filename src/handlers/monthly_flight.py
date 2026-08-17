@@ -1,6 +1,7 @@
 from src.handlers.basehandler import BaseHandler
-from src.normalizer import MonthlyNormalizer
-from src.validator import CommonValidator, MonthlyValidator
+from src.normalizers.monthlynormalizer import MonthlyNormalizer
+from src.validators.commonvalidator import CommonValidator
+from src.validators.monthlyvalidator import MonthlyValidator
 
 
 class MonthlyRouteHandler(BaseHandler):

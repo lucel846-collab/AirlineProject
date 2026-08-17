@@ -1,6 +1,7 @@
 from src.handlers.basehandler import BaseHandler
-from src.normalizer import MonthlyCargoNormalizer
-from src.validator import CommonValidator, MonthlyCargoValidator
+from src.normalizers.monthlycargonormalizer import MonthlyCargoNormalizer
+from src.validators.commonvalidator import CommonValidator
+from src.validators.monthlycargovalidator import MonthlyCargoValidator
 
 
 class MonthlyCargoHandler(BaseHandler):

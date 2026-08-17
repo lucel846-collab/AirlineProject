@@ -1,0 +1,42 @@
+import pandas as pd
+from src.logger import logger
+from src.master_data import MasterData
+
+
+class MonthlyCargoNormalizer:
+
+    def __init__(self, master: MasterData):
+        self.master = master
+    def normalize_airport(self, df: pd.DataFrame) -> None:
+        logger.info("運航日の正規化開始")
+        df["年月"] = pd.to_datetime(df["年月"])
+        logger.info("運航日の正規化完了")
+
+    def add_airline_name(self, df: pd.DataFrame) -> None:
+        logger.info("航空会社名追加開始")
+        df["航空会社名"] = df["航空会社"].map(self.master.get_airline_name)
+        logger.info("航空会社名追加完了")
+
+    def add_route(self, df: pd.DataFrame) -> None:
+        logger.info("路線コード・路線名追加開始")
+        df["路線CD"] = df.apply(
+            lambda row: self.master.get_route_code(
+                row["航空会社"],
+                row["事業所"],
+                f"{row['出発空港']}{row['到着空港']}"
+            ),
+            axis=1
+        )
+
+        df["路線名"] = df.apply(
+            lambda row:self.master.get_route_name(
+                row["路線CD"], 
+                row["事業所"]
+            ),
+            axis=1
+        )
+        df["座席数"] = 0
+        df["旅客数"] = 0
+        df["INF数"] = 0
+
+        logger.info("路線コード・路線名追加完了")

@@ -1,5 +1,5 @@
 import pandas as pd
-from src.validator_result import ValidationResult
+from src.validators.validator_result import ValidationResult
 
 # 運航区分
 VALID_OPERATION_TYPES = {

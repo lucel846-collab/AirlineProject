@@ -1,6 +1,6 @@
 import pandas as pd
 from src.master_data import MasterData
-from src.validator_result import ValidationResult
+from src.validators.validator_result import ValidationResult
 
 
 def validate_airline_code(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:

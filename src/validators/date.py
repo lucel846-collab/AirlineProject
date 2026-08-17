@@ -1,5 +1,5 @@
 import pandas as pd
-from src.validator_result import ValidationResult
+from src.validators.validator_result import ValidationResult
 
 
 def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: ValidationResult) -> None:

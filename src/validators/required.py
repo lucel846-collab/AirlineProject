@@ -1,5 +1,5 @@
 import pandas as pd
-from src.validator_result import ValidationResult
+from src.validators.validator_result import ValidationResult
 
 # 必須列
 REQUIRED_COLUMNS1 = [
