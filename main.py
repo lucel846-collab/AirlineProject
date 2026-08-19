@@ -4,6 +4,7 @@ import os
 from src.detect_layout import Layout_type, detect_layout
 from src.exporter import export_csv
 from src.handlers.daily_flight import DailyFlightHandler
+from src.handlers.daily_irregal import DailyIrregularHandler
 from src.handlers.daily_route import DailyRouteHandler
 from src.handlers.foreign_cargo import ForeignCargoHandler
 from src.handlers.monthly_cargo import MonthlyCargoHandler
@@ -25,6 +26,7 @@ class FlightConverter:
             Layout_type.DAILY_ROUTE.value: DailyRouteHandler(self.master),
             Layout_type.MONTHLY_CARGO.value: MonthlyCargoHandler(self.master),
             Layout_type.FOREIGN_CARGO.value: ForeignCargoHandler(self.master),
+            Layout_type.IRREGULAR_FLIGHT.value: DailyIrregularHandler(self.master),
             }
         logger.info("▽変換開始▽")
         self.master.load() 
@@ -34,6 +36,7 @@ class FlightConverter:
             logger.info(f"処理ファイル: {fbasename}")
             df = read_excel(file_path)
             layout =detect_layout(df)
+            logger.info(f"処理ファイル: {layout}")
             handler =handlers.get(layout)
 
             if handler is None:

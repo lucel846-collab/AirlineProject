@@ -9,6 +9,7 @@ class Layout_type(Enum):
     DAILY_ROUTE = "DAILY_ROUTE"
     MONTHLY_CARGO = "MONTHLY_CARGO"
     FOREIGN_CARGO = "FOREIGN_CARGO"
+    IRREGULAR_FLIGHT = "IRREGULAR_FLIGHT"
     UNKNOWN = "UNKNOWN"
 
 
@@ -47,8 +48,16 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         "郵便卸荷重量"
         ]
 
+    LAYOUT6_COLUMNS = [
+        "運航種別1",
+        "運航種別2",
+        "発着区分",
+        "ハンドリング会社",
+        ]
 
-    if all(col in df.columns for col in LAYOUT1_COLUMNS):
+    if all(col in df.columns for col in LAYOUT6_COLUMNS):
+        return Layout_type.IRREGULAR_FLIGHT.value
+    elif all(col in df.columns for col in LAYOUT1_COLUMNS):
         return Layout_type.DAILY_FLIGHT.value
     elif all(col in df.columns for col in LAYOUT2_COLUMNS):
         return Layout_type.MONTHLY_ROUTE.value

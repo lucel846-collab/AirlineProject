@@ -6,7 +6,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-def export_validation_errors(errors, path: Path):
+def export_validation_errors(errors, path: Path)->  None: 
 
     df = pd.DataFrame(errors)
 

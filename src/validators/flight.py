@@ -59,9 +59,9 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
                 message="XD(DVT)では「到着予定空港」が必須です"
             )
 
-        elif row["運航区分"] == "ND(周遊)" and not(
-            pd.isna(row["出発空港"]) and pd.isna(row["到着空港"]) 
-            and str(row["出発空港"]).strip() == str(row["到着空港"]).strip()
+        elif row["運航区分"] == "ND(周遊)" and (
+            not(pd.isna(row["出発空港"]) or pd.isna(row["到着空港"])) 
+            and (str(row["出発空港"]).strip() != str(row["到着空港"]).strip())
         ):
             result.add_error(
                 filenm=df.attrs.get("filename"),

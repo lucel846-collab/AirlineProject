@@ -90,7 +90,8 @@ def export_csv(df, path: Path,layout:str) -> pd.DataFrame:
         Layout_type.DAILY_ROUTE.value: REINDEXED_COLUMNS3,
         Layout_type.MONTHLY_CARGO.value: REINDEXED_COLUMNS4,
         Layout_type.FOREIGN_CARGO.value: REINDEXED_COLUMNS5,
-        }
+        Layout_type.IRREGULAR_FLIGHT.value: REINDEXED_COLUMNS1,
+        }        
     selector = selectors.get(layout)
     df_reindexed =df.reindex(columns=selector)
     df_reindexed.to_csv(path, index=False, encoding="utf-8-sig")

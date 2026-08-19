@@ -23,7 +23,18 @@ class DailyNormalizer:
 
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
-        df["路線CD"] = df.apply(
+        # 対策：存在しないカラムを、あらかじめ空の文字列（str）の列として新規作成
+        df["路線CD"] = ""
+        df["路線名"] = ""
+        # 明示的にオブジェクト型（何でも入る型）に
+        df["路線CD"] = df["路線CD"].astype(object)
+        df["路線名"] = df["路線名"].astype(object)
+        # 運航区分をグループに分ける
+        is_target1 = df["運航区分"].isin(["SD(定期)", "SI(定期)", "XD(臨時)", "XI(臨時)"])
+        is_target2 = df["運航区分"].isin(["ND(CHRT)","NI(CHRT)","ND(周遊)"])
+        is_target3 = df["運航区分"].isin(["XD(DVT)","XI(DVT)"])
+
+        df.loc[is_target1, "路線CD"] = df[is_target1].apply(
             lambda row: self.master.get_route_code(
                 row["航空会社"],
                 row["事業所"],
@@ -31,14 +42,24 @@ class DailyNormalizer:
             ),
             axis=1
         )
-
-        df["路線名"] = df.apply(
+        df.loc[is_target1,"路線名"] = df.apply(
             lambda row:self.master.get_route_name(
                 row["路線CD"], 
                 row["事業所"]
             ),
             axis=1
         )
+        df.loc[is_target2, "路線CD"] = df.loc[is_target2].apply(
+            lambda row: f"{row['出発空港']}{row['到着空港']}",
+            axis=1,
+        )
+        df.loc[is_target2,"路線名"] = "チャーター"
+
+        df.loc[is_target3,"路線CD"] = df.loc[is_target3].apply(
+            lambda row: f"{row['出発空港']}{row['到着予定空港']}",
+            axis=1,
+        )
+        df.loc[is_target3,"路線名"] = "その他"
 
         df["到着予定空港"] = df["到着予定空港"].map(self.master.airport_name_dict)
             

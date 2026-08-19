@@ -10,7 +10,9 @@ def validate_route_alias_routecode(df: pd.DataFrame, master: MasterData,result: 
             row["事業所"],
             f"{row['出発空港']}{row['到着空港']}"
             )
-        if not master.exists_route_alias(*key):
+        if df["運航区分"].isin(
+            ["SD(定期)", "SI(定期)","XD(臨時)", "XI(臨時)"]
+            ).all() and  not master.exists_route_alias(*key):
             result.add_error(
                 filenm=df.attrs.get("filename"),
                 index=index,
