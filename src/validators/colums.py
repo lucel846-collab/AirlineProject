@@ -102,75 +102,34 @@ LAYOUT_COLUMNS6 = [
     "事業所",
 ]
 
-def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) -> None:
-
-    required_columns = LAYOUT_COLUMNS1
+# --- 共通ロジック関数 ---
+def validate_columns_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
+    """列の存在チェックを行う共通ロジック"""
+    filename = df.attrs.get("filename")
     for col in required_columns:
         if col not in df.columns:
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=0,
                 column=col,
                 value="",
                 message="列が存在しません"
             )
+
+def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+    validate_columns_base(df, result, LAYOUT_COLUMNS1)
 
 def validate_columns_monthly(df: pd.DataFrame,_master,result: ValidationResult) -> None:
-    required_columns = LAYOUT_COLUMNS2
-    for col in required_columns:
-        if col not in df.columns:
-            result.add_error(
-                filenm=df.attrs.get("filename"),
-                index=0,
-                column=col,
-                value="",
-                message="列が存在しません"
-            )
+    validate_columns_base(df, result, LAYOUT_COLUMNS2)
 
 def validate_columns_daily_route(df: pd.DataFrame,_master,result: ValidationResult) -> None:
-    required_columns = LAYOUT_COLUMNS3
-    for col in required_columns:
-        if col not in df.columns:
-            result.add_error(
-                filenm=df.attrs.get("filename"),
-                index=0,
-                column=col,
-                value="",
-                message="列が存在しません"
-            )
+    validate_columns_base(df, result, LAYOUT_COLUMNS3)
 
 def validate_columns_monthly_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
-    required_columns = LAYOUT_COLUMNS4
-    for col in required_columns:
-        if col not in df.columns:
-            result.add_error(
-                filenm=df.attrs.get("filename"),
-                index=0,
-                column=col,
-                value="",
-                message="列が存在しません"
-            )
+    validate_columns_base(df, result, LAYOUT_COLUMNS4)
 
 def validate_columns_foreign_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
-    required_columns = LAYOUT_COLUMNS5
-    for col in required_columns:
-        if col not in df.columns:
-            result.add_error(
-                filenm=df.attrs.get("filename"),
-                index=0,
-                column=col,
-                value="",
-                message="列が存在しません"
-            )
+    validate_columns_base(df, result, LAYOUT_COLUMNS5)
 
 def validate_columns_irregular(df: pd.DataFrame,_master,result: ValidationResult) -> None:
-    required_columns = LAYOUT_COLUMNS6
-    for col in required_columns:
-        if col not in df.columns:
-            result.add_error(
-                filenm=df.attrs.get("filename"),
-                index=0,
-                column=col,
-                value="",
-                message="列が存在しません"
-            )
+    validate_columns_base(df, result, LAYOUT_COLUMNS6)

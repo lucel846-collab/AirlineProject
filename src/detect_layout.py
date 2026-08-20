@@ -4,12 +4,12 @@ import pandas as pd
 
 
 class Layout_type(Enum):
-    DAILY_FLIGHT = "DAILY_FLIGHT"
+    DAILY = "DAILY"
     MONTHLY_ROUTE = "MONTHLY_ROUTE"
     DAILY_ROUTE = "DAILY_ROUTE"
     MONTHLY_CARGO = "MONTHLY_CARGO"
     FOREIGN_CARGO = "FOREIGN_CARGO"
-    IRREGULAR_FLIGHT = "IRREGULAR_FLIGHT"
+    IRREGULAR = "IRREGULAR"
     UNKNOWN = "UNKNOWN"
 
 
@@ -56,9 +56,9 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         ]
 
     if all(col in df.columns for col in LAYOUT6_COLUMNS):
-        return Layout_type.IRREGULAR_FLIGHT.value
+        return Layout_type.IRREGULAR.value
     elif all(col in df.columns for col in LAYOUT1_COLUMNS):
-        return Layout_type.DAILY_FLIGHT.value
+        return Layout_type.DAILY.value
     elif all(col in df.columns for col in LAYOUT2_COLUMNS):
         return Layout_type.MONTHLY_ROUTE.value
     elif all(col in df.columns for col in LAYOUT3_COLUMNS):

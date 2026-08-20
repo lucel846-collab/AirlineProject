@@ -92,75 +92,33 @@ REQUIRED_COLUMNS6 = [
     "ハンドリング会社",
     "事業所",
 ]
-
-
-def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_COLUMNS1:
-        for index, value in df[col].items():
+def validate_required_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
+    #必須項目の存在チェックを行う共通ロジック"""
+    filename = df.attrs.get("filename")
+    for col in required_columns:
+         for index, value in df[col].items():
             if pd.isna(value) or str(value).strip() == "":
                 result.add_error(
-                    filenm=df.attrs.get("filename"),
+                    filenm=filename,
                     index=index,
                     column=col,
                     value=value,
                     message="必須項目です"
-                )
+            )
+def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS1)
+
 def validate_required_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_COLUMNS2:
-            for index, value in df[col].items():
-                if pd.isna(value) or str(value).strip() == "":
-                    result.add_error(
-                        filenm=df.attrs.get("filename"),
-                        index=index,
-                        column=col,
-                        value=value,
-                        message="必須項目です"
-                    )
+    validate_required_base(df, result, REQUIRED_COLUMNS2)
     
 def validate_required_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_COLUMNS3:
-            for index, value in df[col].items():
-                if pd.isna(value) or str(value).strip() == "":
-                    result.add_error(
-                        filenm=df.attrs.get("filename"), 
-                        index=index,
-                        column=col,
-                        value=value,
-                        message="必須項目です"
-                    )
+    validate_required_base(df, result, REQUIRED_COLUMNS3)
     
 def validate_required_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_COLUMNS4:
-            for index, value in df[col].items():
-                if pd.isna(value) or str(value).strip() == "":
-                    result.add_error(
-                        filenm=df.attrs.get("filename"), 
-                        index=index,
-                        column=col,
-                        value=value,
-                        message="必須項目です"
-                    )
+    validate_required_base(df, result, REQUIRED_COLUMNS4)
 
 def validate_required_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_COLUMNS5:
-            for index, value in df[col].items():
-                if pd.isna(value) or str(value).strip() == "":
-                    result.add_error(
-                        filenm=df.attrs.get("filename"), 
-                        index=index,
-                        column=col,
-                        value=value,
-                        message="必須項目です"
-                    )
+    validate_required_base(df, result, REQUIRED_COLUMNS5)
 
 def validate_required_irregular(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_COLUMNS6:
-            for index, value in df[col].items():
-                if pd.isna(value) or str(value).strip() == "":
-                    result.add_error(
-                        filenm=df.attrs.get("filename"), 
-                        index=index,
-                        column=col,
-                        value=value,
-                        message="必須項目です"
-                    )
+    validate_required_base(df, result, REQUIRED_COLUMNS6)

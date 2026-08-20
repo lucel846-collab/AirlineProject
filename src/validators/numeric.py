@@ -50,9 +50,10 @@ REQUIRED_NUMERIC6 = [
     "メール重量"
 ]
 
-def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_NUMERIC1:
-        for index, value in df[col].items():
+def validate_numeric_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
+    #必須項目の数値チェックを行う共通ロジック"""
+    for col in required_columns:
+         for index, value in df[col].items():
             if not pd.isna(value) and not isinstance(value, (int, float)):
                 result.add_error(
                     filenm=df.attrs.get("filename"),
@@ -60,7 +61,7 @@ def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -
                     column=col,
                     value=value,
                     message="数値である必要があります"
-                )
+            )
             elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
                 result.add_error(
                     filenm=df.attrs.get("filename"),
@@ -70,103 +71,20 @@ def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -
                     message="正数値の必要があります"
                 )
 
+def validate_numeric_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_numeric_base(df, result, REQUIRED_NUMERIC1)
 
 def validate_numeric_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_NUMERIC2:
-        for index, value in df[col].items():
-            if not pd.isna(value) and not isinstance(value, (int, float)):
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="数値である必要があります"
-                )
-            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="正数値の必要があります"
-                )
+    validate_numeric_base(df, result, REQUIRED_NUMERIC2)
 
 def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_NUMERIC3:
-        for index, value in df[col].items():
-            if not pd.isna(value) and not isinstance(value, (int, float)):
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="数値である必要があります"
-                )
-            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="正数値の必要があります"
-                )
+    validate_numeric_base(df, result, REQUIRED_NUMERIC3)
 
 def validate_numeric_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_NUMERIC4:
-        for index, value in df[col].items():
-            if not pd.isna(value) and not isinstance(value, (int, float)):
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="数値である必要があります"
-                )
-            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="正数値の必要があります"
-                )
+    validate_numeric_base(df, result, REQUIRED_NUMERIC4)
 
 def validate_numeric_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_NUMERIC5:
-        for index, value in df[col].items():
-            if not pd.isna(value) and not isinstance(value, (int, float)):
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="数値である必要があります"
-                )
-            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="正数値の必要があります"
-                )
+    validate_numeric_base(df, result, REQUIRED_NUMERIC5)
 
 def validate_numeric_irreguler(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    for col in REQUIRED_NUMERIC6:
-        for index, value in df[col].items():
-            if not pd.isna(value) and not isinstance(value, (int, float)):
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="数値である必要があります"
-                )
-            elif not pd.isna(value) and isinstance(value, (int, float)) and value < 0:
-                result.add_error(
-                    filenm=df.attrs.get("filename"),
-                    index=index,
-                    column=col,
-                    value=value,
-                    message="正数値の必要があります"
-                )
+    validate_numeric_base(df, result, REQUIRED_NUMERIC6)

@@ -21,12 +21,12 @@ class FlightConverter:
 
     def run(self):
         handlers = {
-            Layout_type.DAILY_FLIGHT.value: DailyFlightHandler(self.master),
+            Layout_type.DAILY.value: DailyFlightHandler(self.master),
             Layout_type.MONTHLY_ROUTE.value: MonthlyRouteHandler(self.master),
             Layout_type.DAILY_ROUTE.value: DailyRouteHandler(self.master),
             Layout_type.MONTHLY_CARGO.value: MonthlyCargoHandler(self.master),
             Layout_type.FOREIGN_CARGO.value: ForeignCargoHandler(self.master),
-            Layout_type.IRREGULAR_FLIGHT.value: DailyIrregularHandler(self.master),
+            Layout_type.IRREGULAR.value: DailyIrregularHandler(self.master),
             }
         logger.info("▽変換開始▽")
         self.master.load() 
