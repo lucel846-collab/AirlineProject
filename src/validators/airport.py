@@ -4,21 +4,23 @@ from src.validators.validator_result import ValidationResult
 
 
 def validate_airport_alias(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for column in ("出発空港", "到着空港"):
         for index, value in df[column].items():
             if not pd.isna(value) and value != "" and not master.exists_airport_alias(value):
                 result.add_error(
-                    filenm=df.attrs.get("filename"),
+                    filenm=filename,
                     index=index,
                     column=column,
                     value=value,
                     message=f"{column}コードがエイリアスマスタに存在しません"
                 )
 def validate_airport_alias2(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for index, value in df["到着予定空港"].items():
         if not pd.isna(value) and value != "" and not master.exists_airport_alias(value.strip()):
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="到着予定空港",
                 value=value,
@@ -26,10 +28,11 @@ def validate_airport_alias2(df: pd.DataFrame, master: MasterData, result: Valida
             )
 
 def validate_airport_alias3(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for index, value in df["相手先空港"].items():
         if not pd.isna(value) and value != "" and not master.exists_airport_alias(value.strip()):
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="相手先空港",
                 value=value,

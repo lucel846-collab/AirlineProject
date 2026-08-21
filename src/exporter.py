@@ -15,6 +15,7 @@ REINDEXED_COLUMNS1 = [
     "到着予定空港",
     "座席数",
     "旅客数",
+    "日本人数",
     "INF数",
     "貨物重量",
     "メール重量",
@@ -86,6 +87,8 @@ def export_csv(df, path: Path,layout:str) -> pd.DataFrame:
     logger.info("CSV出力開始")
     selectors = {
         Layout_type.DAILY.value: REINDEXED_COLUMNS1,
+        Layout_type.DAILY2.value: REINDEXED_COLUMNS1,
+        Layout_type.DAILY3.value: REINDEXED_COLUMNS1,
         Layout_type.MONTHLY_ROUTE.value: REINDEXED_COLUMNS2,
         Layout_type.DAILY_ROUTE.value: REINDEXED_COLUMNS3,
         Layout_type.MONTHLY_CARGO.value: REINDEXED_COLUMNS4,

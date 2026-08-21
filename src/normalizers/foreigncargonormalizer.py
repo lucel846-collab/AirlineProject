@@ -36,6 +36,7 @@ class ForeignCargoNormalizer:
                                 ]].rename(columns={"積荷重量":"貨物重量",
                                                    "郵便積荷重量":"メール重量"})
         df_divide1["発着区分"] = "出発"
+        #到着（卸荷）データの作成
 
         df_divide2 = df_proc[["運航区分",
                                 "年月",
@@ -48,6 +49,7 @@ class ForeignCargoNormalizer:
                                 "事業所"
                                 ]].rename(columns={"卸荷重量":"貨物重量",
                                                    "郵便卸荷重量":"メール重量"})
+
         df_divide2["発着区分"] = "到着"
         df_divide2["便数"] = 0      #便数は変更ないので、到着分を0にして、合計では変更ないようにする
         df_combined = pd.concat([df_divide1, df_divide2], ignore_index=True)
@@ -69,6 +71,11 @@ class ForeignCargoNormalizer:
             ),
             axis=1
         )
+        #保税運送の特定対応
+        df_target1 = df_combined["運航区分"].isin(["NI(保税)"])
+        df_combined.loc[df_target1,"路線CD"] = "CTSCTS"
+        df_combined.loc[df_target1,"路線名"] = "保税運送"
+        df_combined.loc[df_target1,"航空会社名"] = "チャーター便等"
 
         # 元のdfのすべての行・列を完全に消去（クリア）
         df.drop(df.index, inplace=True)

@@ -23,6 +23,13 @@ class DailyNormalizer:
 
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
+        if "日本人数" not in df.columns :
+            df["日本人数"] = 0
+
+        if "貨物重量" not in df.columns :
+            df["貨物重量"] = 0
+            df["メール重量"] = 0
+
         # 対策：存在しないカラムを、あらかじめ空の文字列（str）の列として新規作成
         df["路線CD"] = ""
         df["路線名"] = ""
@@ -62,5 +69,9 @@ class DailyNormalizer:
         df.loc[is_target3,"路線名"] = "その他"
 
         df["到着予定空港"] = df["到着予定空港"].map(self.master.airport_name_dict)
-            
+
+        df["日本人数"] = df["日本人数"].fillna(0)
+        df["貨物重量"] = df["貨物重量"].fillna(0)
+        df["メール重量"] = df["メール重量"].fillna(0)
+
         logger.info("路線コード・路線名追加完了")

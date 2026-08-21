@@ -1,14 +1,9 @@
 import glob
 import os
 
-from src.detect_layout import Layout_type, detect_layout
+from src.detect_layout import detect_layout
 from src.exporter import export_csv
-from src.handlers.daily_flight import DailyFlightHandler
-from src.handlers.daily_irregal import DailyIrregularHandler
-from src.handlers.daily_route import DailyRouteHandler
-from src.handlers.foreign_cargo import ForeignCargoHandler
-from src.handlers.monthly_cargo import MonthlyCargoHandler
-from src.handlers.monthly_flight import MonthlyRouteHandler
+from src.handlers.factory import HandlerFactory
 from src.logger import logger
 from src.master_data import MasterData
 from src.paths import INPUT_DIR, OUTPUT_DIR
@@ -20,14 +15,6 @@ class FlightConverter:
         self.master = MasterData()
 
     def run(self):
-        handlers = {
-            Layout_type.DAILY.value: DailyFlightHandler(self.master),
-            Layout_type.MONTHLY_ROUTE.value: MonthlyRouteHandler(self.master),
-            Layout_type.DAILY_ROUTE.value: DailyRouteHandler(self.master),
-            Layout_type.MONTHLY_CARGO.value: MonthlyCargoHandler(self.master),
-            Layout_type.FOREIGN_CARGO.value: ForeignCargoHandler(self.master),
-            Layout_type.IRREGULAR.value: DailyIrregularHandler(self.master),
-            }
         logger.info("▽変換開始▽")
         self.master.load() 
         file_paths = glob.glob(f"{INPUT_DIR}/*.xlsx")
@@ -36,9 +23,9 @@ class FlightConverter:
             logger.info(f"処理ファイル: {fbasename}")
             df = read_excel(file_path)
             layout =detect_layout(df)
-            logger.info(f"処理ファイル: {layout}")
-            handler =handlers.get(layout)
-
+            logger.info(f"レイアウトタイプ: {layout}")
+            handler =HandlerFactory.create_handler(layout, self.master)
+            
             if handler is None:
                 logger.error(f"未対応のレイアウトです: {layout}")
                 continue

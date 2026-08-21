@@ -9,7 +9,7 @@ REQUIRED_COLUMNS1 = [
     "便名",
     "出発空港",
     "到着空港",
-    "機材",
+    "機材名",
     "座席数",
     "旅客数",
     "INF数",
@@ -19,6 +19,37 @@ REQUIRED_COLUMNS1 = [
 ]
 
 REQUIRED_COLUMNS2 = [
+    "運航区分",
+    "運航日",
+    "航空会社",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "機材名",
+    "座席数",
+    "日本人数",
+    "旅客数",
+    "INF数",
+    "貨物重量",
+    "メール重量",
+    "事業所",
+]
+
+REQUIRED_COLUMNS3 = [
+    "運航区分",
+    "運航日",
+    "航空会社",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "機材名",
+    "座席数",
+    "旅客数",
+    "INF数",
+    "事業所",
+]
+
+REQUIRED_COLUMNS4 = [
     "運航区分",
     "年月",
     "航空会社",
@@ -33,7 +64,7 @@ REQUIRED_COLUMNS2 = [
     "事業所",
 ]
 
-REQUIRED_COLUMNS3 = [
+REQUIRED_COLUMNS5 = [
     "運航区分",
     "運航日",
     "航空会社",
@@ -47,7 +78,7 @@ REQUIRED_COLUMNS3 = [
     "事業所",
 ]
 
-REQUIRED_COLUMNS4 = [
+REQUIRED_COLUMNS7 = [
     "運航区分",
     "年月",
     "航空会社",
@@ -60,7 +91,7 @@ REQUIRED_COLUMNS4 = [
     "事業所",
 ]
 
-REQUIRED_COLUMNS5 = [
+REQUIRED_COLUMNS8 = [
     "運航区分",
     "年月",
     "航空会社",
@@ -83,7 +114,7 @@ REQUIRED_COLUMNS6 = [
     "便名",
     "出発空港",
     "到着空港",
-    "機材",
+    "機材名",
     "座席数",
     "旅客数",
     "INF数",
@@ -104,21 +135,28 @@ def validate_required_base(df: pd.DataFrame, result: ValidationResult, required_
                     column=col,
                     value=value,
                     message="必須項目です"
-            )
+                )
 def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_required_base(df, result, REQUIRED_COLUMNS1)
 
-def validate_required_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+def validate_required_daily2(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_required_base(df, result, REQUIRED_COLUMNS2)
+
+def validate_required_daily3(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS3)
+
+def validate_required_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS4)
     
 def validate_required_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS3)
-    
-def validate_required_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS4)
-
-def validate_required_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_required_base(df, result, REQUIRED_COLUMNS5)
 
 def validate_required_irregular(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_required_base(df, result, REQUIRED_COLUMNS6)
+
+def validate_required_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS7)
+
+def validate_required_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS8)
+

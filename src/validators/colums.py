@@ -10,7 +10,7 @@ LAYOUT_COLUMNS1 = [
     "出発空港",
     "到着空港",
     "到着予定空港",
-    "機材",
+    "機材名",
     "座席数",
     "旅客数",
     "INF数",
@@ -21,6 +21,42 @@ LAYOUT_COLUMNS1 = [
 ]
 
 LAYOUT_COLUMNS2 = [
+    "運航区分",
+    "運航日",
+    "航空会社",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "到着予定空港",
+    "機材名",
+    "座席数",
+    "日本人数",
+    "旅客数",
+    "INF数",
+    "貨物重量",
+    "メール重量",
+    "備考",
+    "事業所",
+]
+
+LAYOUT_COLUMNS3 = [
+    "運航区分",
+    "運航日",
+    "航空会社",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "到着予定空港",
+    "機材名",
+    "座席数",
+    "旅客数",
+    "INF数",
+    "備考",
+    "事業所",
+]
+
+
+LAYOUT_COLUMNS4 = [
     "運航区分",
     "年月",
     "航空会社",
@@ -37,7 +73,7 @@ LAYOUT_COLUMNS2 = [
     "事業所",
 ]
 
-LAYOUT_COLUMNS3 = [
+LAYOUT_COLUMNS7 = [
     "運航区分",
     "運航日",
     "航空会社",
@@ -52,7 +88,7 @@ LAYOUT_COLUMNS3 = [
     "事業所",
 ]
 
-LAYOUT_COLUMNS4 = [
+LAYOUT_COLUMNS5 = [
     "運航区分",
     "年月",
     "航空会社",
@@ -65,7 +101,7 @@ LAYOUT_COLUMNS4 = [
     "事業所",
 ]
 
-LAYOUT_COLUMNS5 = [
+LAYOUT_COLUMNS8 = [
     "運航区分",
     "年月",
     "航空会社",
@@ -91,7 +127,7 @@ LAYOUT_COLUMNS6 = [
     "到着予定空港",
     "発着区分",
     "機体記号",
-    "機材",
+    "機材名",
     "座席数",
     "旅客数",
     "手荷物数",
@@ -104,7 +140,7 @@ LAYOUT_COLUMNS6 = [
 
 # --- 共通ロジック関数 ---
 def validate_columns_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
-    """列の存在チェックを行う共通ロジック"""
+    #列の存在チェックを行う共通ロジック
     filename = df.attrs.get("filename")
     for col in required_columns:
         if col not in df.columns:
@@ -119,17 +155,24 @@ def validate_columns_base(df: pd.DataFrame, result: ValidationResult, required_c
 def validate_columns_daily(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     validate_columns_base(df, result, LAYOUT_COLUMNS1)
 
-def validate_columns_monthly(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+def validate_columns_daily2(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     validate_columns_base(df, result, LAYOUT_COLUMNS2)
 
-def validate_columns_daily_route(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+def validate_columns_daily3(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     validate_columns_base(df, result, LAYOUT_COLUMNS3)
 
-def validate_columns_monthly_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+def validate_columns_monthly(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     validate_columns_base(df, result, LAYOUT_COLUMNS4)
 
-def validate_columns_foreign_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+def validate_columns_monthly_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     validate_columns_base(df, result, LAYOUT_COLUMNS5)
 
 def validate_columns_irregular(df: pd.DataFrame,_master,result: ValidationResult) -> None:
     validate_columns_base(df, result, LAYOUT_COLUMNS6)
+
+def validate_columns_daily_route(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+    validate_columns_base(df, result, LAYOUT_COLUMNS7)
+
+def validate_columns_foreign_cargo(df: pd.DataFrame,_master,result: ValidationResult) -> None:
+    validate_columns_base(df, result, LAYOUT_COLUMNS8)
+

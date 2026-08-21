@@ -4,11 +4,11 @@ from src.validators.validator_result import ValidationResult
 
 
 def validate_airline_code(df: pd.DataFrame, master: MasterData, result: ValidationResult) -> None:
-
+    filename = df.attrs.get("filename")
     for index, value in df["航空会社"].items():
         if not master.exists_airline_code(value.strip()):
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="航空会社",
                 value=value,

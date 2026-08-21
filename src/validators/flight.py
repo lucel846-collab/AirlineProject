@@ -11,6 +11,7 @@ VALID_OPERATION_TYPES = {
     "NI(CHRT)",
     "NI(保税)",
     "XD(臨時)",
+    "XI(臨時)",
     "ND(周遊)",
 }
 # 必須列名
@@ -23,10 +24,11 @@ CANCELLED_FLIGHT_CHECK_COLUMNS = [
 ]
 
 def validate_operation_type(df: pd.DataFrame, _master,result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for index, value in df["運航区分"].items():
         if value not in VALID_OPERATION_TYPES:
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="運航区分",
                 value=value,
@@ -34,25 +36,25 @@ def validate_operation_type(df: pd.DataFrame, _master,result: ValidationResult) 
             )
 
 def validate_seat_count(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for index, row in df.iterrows():
         if isinstance(row["座席数"], (int, float)) and isinstance(row["旅客数"], (int, float)) and row["座席数"] < row["旅客数"]:
                 result.add_error(
-                    filenm=df.attrs.get("filename"),
+                    filenm=filename,
                     index=index,
                     column="座席数",
                     value=row["座席数"],
                     message="旅客数以下です"
                 )
 
-
 def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for index, row in df.iterrows():
-
         if row["運航区分"] == "XD(DVT)" and (
             pd.isna(row["到着予定空港"]) or str(row["到着予定空港"]).strip() == ""
         ):
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="到着予定空港",
                 value=row["到着予定空港"],
@@ -64,7 +66,7 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
             and (str(row["出発空港"]).strip() != str(row["到着空港"]).strip())
         ):
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="到着空港",
                 value=row["到着空港"],
@@ -75,21 +77,21 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
             pd.isna(row["相手先空港"])  and  str(row["到着空港"]).strip() =="" 
         ):
             result.add_error(
-                filenm=df.attrs.get("filename"),
+                filenm=filename,
                 index=index,
                 column="相手先空港",
                 value=row["相手先空港"],
                 message="NI(保全)では相手先空港は記載不要です"
             )
 
-
 def validate_cancelled_flights(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
     for index,row in df.iterrows():
         if row["便名"] in [ "CXL", "CNL"]:
             for col in CANCELLED_FLIGHT_CHECK_COLUMNS:
                 if row[col] !=0:
                     result.add_error(
-                        filenm=df.attrs.get("filename"),
+                        filenm=filename,
                         index=index,
                         column=col,
                         value=row[col],
