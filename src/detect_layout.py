@@ -35,7 +35,7 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         "到着空港",
         "到着予定空港",
         "機材名",
-        "日本人",
+        "日本人数",
         "貨物重量",
         "メール重量",
         ]
