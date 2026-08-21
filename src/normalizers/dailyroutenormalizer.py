@@ -35,5 +35,10 @@ class DailyRouteNormalizer:
             ),
             axis=1
         )
+
+        df["貨物重量"] = df["貨物重量"].fillna(0)
+        df["メール重量"] = df["メール重量"].fillna(0)
+
+
         logger.info("路線コード・路線名追加完了")
 
