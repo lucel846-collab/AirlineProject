@@ -22,6 +22,7 @@ class FlightConverter:
             fbasename = os.path.basename(file_path)
             logger.info(f"処理ファイル: {fbasename}")
             df = read_excel(file_path)
+            #print(df.dropna(how='all').head(3)) #debug
             layout =detect_layout(df)
             logger.info(f"レイアウトタイプ: {layout}")
             handler =HandlerFactory.create_handler(layout, self.master)
