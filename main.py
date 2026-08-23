@@ -15,14 +15,13 @@ class FlightConverter:
         self.master = MasterData()
 
     def run(self):
-        logger.info("▽変換開始▽")
+        logger.info("▽▽▽変換開始▽▽▽")
         self.master.load() 
         file_paths = glob.glob(f"{INPUT_DIR}/*.xlsx")
         for file_path in file_paths:
             fbasename = os.path.basename(file_path)
             logger.info(f"処理ファイル: {fbasename}")
             df = read_excel(file_path)
-            #print(df.dropna(how='all').head(3)) #debug
             layout =detect_layout(df)
             logger.info(f"レイアウトタイプ: {layout}")
             handler =HandlerFactory.create_handler(layout, self.master)
@@ -38,7 +37,7 @@ class FlightConverter:
             
             file_out_path = OUTPUT_DIR / fbasename.replace(".xlsx", ".csv")
             export_csv(df, file_out_path,layout)   
-        logger.info("△変換完了△")
+        logger.info("△△△変換完了△△△")
   
 if __name__ == "__main__":
      FlightConverter().run()
