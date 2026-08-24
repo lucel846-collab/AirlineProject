@@ -4,10 +4,14 @@ from src.validators.airport import (
 )
 from src.validators.basevalidator import BaseValidator
 from src.validators.colums import validate_columns_daily2
-from src.validators.date import validate_previous_date_check_daytype
+from src.validators.date import (
+    validate_date_attr_check_daytype,
+    validate_previous_date_check_daytype,
+)
 from src.validators.flight import (
     validate_cancelled_flights,
     validate_operation_attributes,
+    validate_operation_daily_type,
     validate_seat_count,
 )
 from src.validators.numeric import validate_numeric_daily2
@@ -28,8 +32,10 @@ class DailyValidator2(BaseValidator):
         validate_route_alias_routecode,
     )
     business_rule_checks = (
+        validate_date_attr_check_daytype,
         validate_previous_date_check_daytype,
         validate_cancelled_flights,
         validate_operation_attributes,
+        validate_operation_daily_type,
         validate_seat_count,
     )

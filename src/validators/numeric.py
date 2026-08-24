@@ -27,6 +27,8 @@ REQUIRED_NUMERIC3 = [
 
 REQUIRED_NUMERIC4 = [
     "便数",
+    "計画便数",
+    "有償貨物件数",
     "座席数",
     "旅客数",
     "INF数",

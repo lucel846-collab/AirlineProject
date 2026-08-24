@@ -1,5 +1,32 @@
+from datetime import date, datetime
+
 import pandas as pd
 from src.validators.validator_result import ValidationResult
+
+
+def validate_date_attr_check_daytype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
+    for index,row in df.iterrows():
+        if not isinstance(row["運航日"],(datetime,date)):
+            result.add_error(
+                filenm=filename,
+                index=index,
+                column="運航日",
+                value=row["運航日"],
+                message="運航日は日付形式である必要があります。"
+            )
+
+def validate_date_attr_check_monthtype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
+    for index,row in df.iterrows():
+        if not isinstance(row["年月"],(datetime,date)):
+            result.add_error(
+                filenm=filename,
+                index=index,
+                column="年月",
+                value=row["年月"],
+                message="年月は日付形式である必要があります。"
+            )
 
 
 def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
