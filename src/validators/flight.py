@@ -36,7 +36,6 @@ VALID_OPERATION_FOREIGN_CARGO_TYPES = {
     "NI(保税)",
 }
 
-
 # 必須列名
 CANCELLED_FLIGHT_CHECK_COLUMNS = [
     "座席数",
@@ -45,56 +44,30 @@ CANCELLED_FLIGHT_CHECK_COLUMNS = [
     "貨物重量",
     "メール重量",
 ]
+# --- 共通ロジック関数 ---
+def validate_operation_base(df:pd.DataFrame, result: ValidationResult,required_columns: list[str]) -> None:
+    filename = df.attrs.get("filename")
+    for index, value in df["運航区分"].items():
+        if value not in required_columns:
+            result.add_error(
+                filenm=filename,
+                index=index,
+                column="運航区分",
+                value=value,
+                message="値が不正です"
+            )
 
 def validate_operation_daily_type(df: pd.DataFrame, _master,result: ValidationResult) -> None:
-    filename = df.attrs.get("filename")
-    for index, value in df["運航区分"].items():
-        if value not in VALID_OPERATION_DAILY_TYPES:
-            result.add_error(
-                filenm=filename,
-                index=index,
-                column="運航区分",
-                value=value,
-                message="値が不正です"
-            )
+    validate_operation_base(df, result, VALID_OPERATION_DAILY_TYPES)
 
 def validate_operation_monthly_type(df: pd.DataFrame, _master,result: ValidationResult) -> None:
-    filename = df.attrs.get("filename")
-    for index, value in df["運航区分"].items():
-        if value not in VALID_OPERATION_MONTHLY_TYPES:
-            result.add_error(
-                filenm=filename,
-                index=index,
-                column="運航区分",
-                value=value,
-                message="値が不正です"
-            )
+    validate_operation_base(df, result,  VALID_OPERATION_MONTHLY_TYPES)
 
 def validate_operation_irregal_type(df: pd.DataFrame, _master,result: ValidationResult) -> None:
-    filename = df.attrs.get("filename")
-    for index, value in df["運航区分"].items():
-        if value not in VALID_OPERATION_IRREGAL_TYPES:
-            result.add_error(
-                filenm=filename,
-                index=index,
-                column="運航区分",
-                value=value,
-                message="値が不正です"
-            )
-
+    validate_operation_base(df, result,VALID_OPERATION_IRREGAL_TYPES)
+    
 def validate_operation_foreign_cargo_type(df: pd.DataFrame, _master,result: ValidationResult) -> None:
-    filename = df.attrs.get("filename")
-    for index, value in df["運航区分"].items():
-        if value not in VALID_OPERATION_FOREIGN_CARGO_TYPES:
-            result.add_error(
-                filenm=filename,
-                index=index,
-                column="運航区分",
-                value=value,
-                message="値が不正です"
-            )
-
-
+    validate_operation_base(df, result, VALID_OPERATION_FOREIGN_CARGO_TYPES)
 
 def validate_seat_count(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     filename = df.attrs.get("filename")
@@ -104,8 +77,8 @@ def validate_seat_count(df: pd.DataFrame,_master, result: ValidationResult) -> N
                     filenm=filename,
                     index=index,
                     column="座席数",
-                    value=row["座席数"],
-                    message="旅客数以下です"
+                    value={"旅客数": row["旅客数"], "座席数": row["座席数"]},
+                    message="座席数より旅客数が超過しています"
                 )
 
 def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationResult) -> None:
