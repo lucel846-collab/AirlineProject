@@ -25,6 +25,9 @@ class DailyNormalizer:
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名・その他変換処理開始")
         #　項目の有無により初期化する
+        if "便数" not in df.columns :
+            df["便数"] = 1
+
         if "日本人数" not in df.columns :
             df["日本人数"] = 0
 
@@ -84,7 +87,7 @@ class DailyNormalizer:
 
         #　到着予定空港の名称取得
         df["到着予定空港"] = df["到着予定空港"].map(self.master.airport_name_dict)
-        #　入力項目のあるなしに関わらず、項目あれば値セットなければ0セット
+        #　入力項目のあるにも関わらず、項目あれば値セットなければ0セット
         df["日本人数"] = df["日本人数"].fillna(0)
         df["貨物重量"] = df["貨物重量"].fillna(0)
         df["メール重量"] = df["メール重量"].fillna(0)

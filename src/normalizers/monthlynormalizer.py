@@ -19,6 +19,15 @@ class MonthlyNormalizer:
 
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
+
+        #　項目初期化0セット
+        if "計画便数" not in df.columns :
+            df["計画便数"] = df["計画便数"].astype("Int64")
+            df["計画便数"] = 0
+        if "有償貨物件数" not in df.columns :
+            df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
+            df["有償貨物件数"] = 0
+
         df["路線CD"] = df.apply(
             lambda row: self.master.get_route_counter(
                 row["航空会社"],
@@ -36,6 +45,12 @@ class MonthlyNormalizer:
             ),
             axis=1
         )
+        #　入力項目のあるにも関わらず、数値なければ0セット
+        df["計画便数"] = df["計画便数"].astype("Int64")
+        df["計画便数"] = df["計画便数"].fillna(0)
+        df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
+        df["有償貨物件数"] = df["有償貨物件数"].fillna(0)
+
 
         df["貨物重量"] = df["貨物重量"].fillna(0)
         df["メール重量"] = df["メール重量"].fillna(0)
