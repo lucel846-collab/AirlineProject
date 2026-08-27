@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from src.logger import logger
 from src.master_data import MasterData
+from src.validators.date import privious_month_first_day
 
 
 class DailyNormalizer:
@@ -37,7 +38,8 @@ class DailyNormalizer:
 
         if "備考" not in df.columns :
             df["備考"] = ""    
-
+        # 年月を作成する。
+        df["年月"] = privious_month_first_day(df)
         # 備考があってもNULLの場合はブランクで初期化しておく
         df["備考"] = np.where(df["備考"].isnull,"",df["備考"])
 

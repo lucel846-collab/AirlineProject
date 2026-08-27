@@ -1,6 +1,7 @@
 import pandas as pd
 from src.logger import logger
 from src.master_data import MasterData
+from src.validators.date import privious_month_first_day
 
 
 class DailyRouteNormalizer:
@@ -19,6 +20,10 @@ class DailyRouteNormalizer:
 
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
+
+        # 年月を作成する。
+        df["年月"] = privious_month_first_day(df)
+
         df["路線CD"] = df.apply(
             lambda row: self.master.get_route_code(
                 row["航空会社"],

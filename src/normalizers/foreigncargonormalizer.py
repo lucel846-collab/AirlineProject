@@ -84,5 +84,9 @@ class ForeignCargoNormalizer:
         for col in df_combined.columns:
             df[col] = df_combined[col] # データを上書き
 
+        df["座席数"] = 0
+        df["旅客数"] = 0
+        df["INF数"] = 0
+
         logger.info("路線コード・路線名追加完了")
         return df

@@ -27,16 +27,24 @@ def validate_date_attr_check_monthtype(df: pd.DataFrame,_master, result: Validat
                 value=row["年月"],
                 message="年月は日付形式である必要があります。"
             )
-
-
-def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    filename = df.attrs.get("filename")
+def privious_month_first_day(df: pd.DataFrame)-> datetime:
     today = pd.Timestamp.today().normalize()
     first_date = today.replace(day=1)
     last_date_prev_month = first_date - pd.Timedelta(days=1)
-    first_date_prev_month = last_date_prev_month.replace(day=1)
+    return last_date_prev_month.replace(day=1)
+    
+def privious_month_last_day(df: pd.DataFrame)-> datetime:
+    today = pd.Timestamp.today().normalize()
+    first_date = today.replace(day=1)
+    return first_date - pd.Timedelta(days=1)
+    
+
+def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
+    last_date_prev_month = privious_month_last_day(df)
+    first_date_prev_month = privious_month_first_day(df)
     for index,row in df.iterrows():
-        if (row["運航日"] >= last_date_prev_month and  row["運航日"] <= first_date_prev_month):
+        if not (row["運航日"] <= last_date_prev_month and  row["運航日"] >= first_date_prev_month):
             result.add_error(
                 filenm=filename,
                 index=index,
@@ -47,10 +55,7 @@ def validate_previous_date_check_daytype(df: pd.DataFrame,_master, result: Valid
 
 def validate_previous_date_check_monthtype(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     filename = df.attrs.get("filename")
-    today = pd.Timestamp.today().normalize()
-    first_date = today.replace(day=1)
-    last_date_prev_month = first_date - pd.Timedelta(days=1)
-    first_date_prev_month = last_date_prev_month.replace(day=1)
+    first_date_prev_month = privious_month_first_day(df)
     for index,row in df.iterrows():
         if ( row["年月"] != first_date_prev_month):
             result.add_error(
