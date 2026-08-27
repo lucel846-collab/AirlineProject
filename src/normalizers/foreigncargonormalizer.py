@@ -8,9 +8,7 @@ class ForeignCargoNormalizer:
     def __init__(self, master: MasterData):
         self.master = master
     def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("運航日の正規化開始")
-        df["年月"] = pd.to_datetime(df["年月"])
-        logger.info("運航日の正規化完了")
+        logger.info("空港関連の正規化対象なし")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")
@@ -84,9 +82,21 @@ class ForeignCargoNormalizer:
         for col in df_combined.columns:
             df[col] = df_combined[col] # データを上書き
 
+        logger.info("路線コード・路線名追加完了")
+        return df
+
+    def add_orthers(self, df: pd.DataFrame) -> None:
+        logger.info("その他変換処理開始")
+
+        df["年月"] = pd.to_datetime(df["年月"])
+
+        df["貨物重量"] = df["貨物重量"].fillna(0)
+        df["メール重量"] = df["メール重量"].fillna(0)
+
         df["座席数"] = 0
         df["旅客数"] = 0
         df["INF数"] = 0
 
-        logger.info("路線コード・路線名追加完了")
-        return df
+
+        logger.info("その他変換処理終了")
+

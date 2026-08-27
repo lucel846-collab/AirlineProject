@@ -94,7 +94,7 @@ def layout_conv_inter(df) -> pd.DataFrame:
 
     records = []
 
-    # 2. 便ごとのデータブロックを6行単位でループ処理
+    # 2. 便ごとのデータブロックを4行単位でループ処理
     start_index = 4
     block_size = 4
     #　Range(開始,終了,ステップ) len(df)はDFの全行数なので、4行目からDFの行数まで、4行ずつ

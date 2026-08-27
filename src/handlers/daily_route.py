@@ -1,7 +1,7 @@
 from src.handlers.basehandler import BaseHandler
 from src.normalizers.dailyroutenormalizer import DailyRouteNormalizer
-from src.validators.commonvalidator import CommonValidator
-from src.validators.dailyroutevalidator import DailyRouteValidator
+from src.validators.validatorset_common import CommonValidator
+from src.validators.validatorset_dailyroute import DailyRouteValidator
 
 
 class DailyRouteHandler(BaseHandler):

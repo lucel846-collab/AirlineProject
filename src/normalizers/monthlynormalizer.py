@@ -8,9 +8,7 @@ class MonthlyNormalizer:
     def __init__(self, master: MasterData):
         self.master = master
     def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("年月の正規化開始")
-        df["年月"] = pd.to_datetime(df["年月"])
-        logger.info("年月の正規化完了")
+        logger.info("空港関連の正規化対象なし")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")
@@ -20,13 +18,6 @@ class MonthlyNormalizer:
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
 
-        #　項目初期化0セット
-        if "計画便数" not in df.columns :
-            df["計画便数"] = df["計画便数"].astype("Int64")
-            df["計画便数"] = 0
-        if "有償貨物件数" not in df.columns :
-            df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
-            df["有償貨物件数"] = 0
 
         df["路線CD"] = df.apply(
             lambda row: self.master.get_route_counter(
@@ -45,6 +36,20 @@ class MonthlyNormalizer:
             ),
             axis=1
         )
+
+        logger.info("路線コード・路線名追加完了")
+
+    def add_orthers(self, df: pd.DataFrame) -> None:
+        logger.info("その他変換処理開始")
+
+        df["年月"] = pd.to_datetime(df["年月"])
+        #　項目初期化0セット
+        if "計画便数" not in df.columns :
+            df["計画便数"] = df["計画便数"].astype("Int64")
+            df["計画便数"] = 0
+        if "有償貨物件数" not in df.columns :
+            df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
+            df["有償貨物件数"] = 0
         #　入力項目のあるにも関わらず、数値なければ0セット
         df["計画便数"] = df["計画便数"].astype("Int64")
         df["計画便数"] = df["計画便数"].fillna(0)
@@ -55,4 +60,5 @@ class MonthlyNormalizer:
         df["貨物重量"] = df["貨物重量"].fillna(0)
         df["メール重量"] = df["メール重量"].fillna(0)
 
-        logger.info("路線コード・路線名追加完了")
+        logger.info("その他変換処理終了")
+

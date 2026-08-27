@@ -1,7 +1,7 @@
 from src.handlers.basehandler import BaseHandler
 from src.normalizers.foreigncargonormalizer import ForeignCargoNormalizer
-from src.validators.commonvalidator import CommonValidator
-from src.validators.forigncargovalidator import ForeignCargoValidator
+from src.validators.validatorset_common import CommonValidator
+from src.validators.validatorset_forigncargo import ForeignCargoValidator
 
 
 class ForeignCargoHandler(BaseHandler):

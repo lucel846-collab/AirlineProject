@@ -1,4 +1,3 @@
-from src.validators.basevalidator import BaseValidator
 from src.validators.colums import validate_columns_monthly
 from src.validators.date import (
     validate_date_attr_check_monthtype,
@@ -11,6 +10,7 @@ from src.validators.flight import (
 from src.validators.numeric import validate_numeric_monthly
 from src.validators.required import validate_required_monthly
 from src.validators.route import validate_route_alias_routename
+from src.validators.validator_flame import BaseValidator
 
 
 class MonthlyValidator(BaseValidator):

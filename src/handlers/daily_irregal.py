@@ -1,7 +1,7 @@
 from src.handlers.basehandler import BaseHandler
 from src.normalizers.dailynormalizer import DailyNormalizer
-from src.validators.commonvalidator import CommonValidator
-from src.validators.dailyirrgularvalidator import DailyIrregularValidator
+from src.validators.validatorset_common import CommonValidator
+from src.validators.validatorset_dailyirrgular import DailyIrregularValidator
 
 
 class DailyIrregularHandler(BaseHandler):

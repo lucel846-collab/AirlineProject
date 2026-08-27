@@ -9,9 +9,7 @@ class DailyRouteNormalizer:
     def __init__(self, master: MasterData):
         self.master = master
     def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("運航日の正規化開始")
-        df["運航日"] = pd.to_datetime(df["運航日"])
-        logger.info("運航日の正規化完了")
+        logger.info("空港関連の正規化なし")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")
@@ -21,8 +19,6 @@ class DailyRouteNormalizer:
     def add_route(self, df: pd.DataFrame) -> None:
         logger.info("路線コード・路線名追加開始")
 
-        # 年月を作成する。
-        df["年月"] = privious_month_first_day(df)
 
         df["路線CD"] = df.apply(
             lambda row: self.master.get_route_code(
@@ -41,9 +37,17 @@ class DailyRouteNormalizer:
             axis=1
         )
 
+        logger.info("路線コード・路線名追加完了")
+
+    def add_orthers(self, df: pd.DataFrame) -> None:
+        logger.info("その他変換処理開始")
+
+        df["運航日"] = pd.to_datetime(df["運航日"])
+        # 年月を作成する。
+        df["年月"] = privious_month_first_day(df)
+
         df["貨物重量"] = df["貨物重量"].fillna(0)
         df["メール重量"] = df["メール重量"].fillna(0)
 
-
-        logger.info("路線コード・路線名追加完了")
+        logger.info("その他変換処理終了")
 

@@ -1,6 +1,6 @@
 from src.validators.airline import validate_airline_code
 from src.validators.airport import validate_airport_office
-from src.validators.basevalidator import BaseValidator
+from src.validators.validator_flame import BaseValidator
 
 
 class CommonValidator(BaseValidator):

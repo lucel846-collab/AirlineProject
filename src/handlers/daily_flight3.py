@@ -1,7 +1,7 @@
 from src.handlers.basehandler import BaseHandler
 from src.normalizers.dailynormalizer import DailyNormalizer
-from src.validators.commonvalidator import CommonValidator
-from src.validators.dailyvalidator3 import DailyValidator3
+from src.validators.validatorset_common import CommonValidator
+from src.validators.validatorset_daily3 import DailyValidator3
 
 
 class DailyFlightHandler3(BaseHandler):

@@ -20,5 +20,6 @@ class BaseHandler:
 
         self.normalizer.add_airline_name(df)
         self.normalizer.add_route(df)
+        self.normalizer.add_others(df)
 
         return result
