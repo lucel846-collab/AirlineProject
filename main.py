@@ -20,6 +20,8 @@ class FlightConverter:
         file_paths = glob.glob(f"{INPUT_DIR}/*.xlsx")
         for file_path in file_paths:
             fbasename = os.path.basename(file_path)
+            if fbasename.startswith("~$"):
+                continue  
             logger.info(f"処理ファイル: {fbasename}")
             df = read_excel(file_path)
             layout =detect_layout(df)

@@ -89,13 +89,15 @@ class DailyNormalizer:
 
         if "備考" not in df.columns :
             df["備考"] = ""    
+        else:
+            df["備考"] = df["備考"].astype(str)
+
         # 欠航便の備考設定対応
         is_target4 = df["機材名"].isin(["CNL","CXL"])
-        df["備考"] = df["備考"].astype(object)
         df.loc[is_target4,"備考"] = "欠航"
 
         # 備考があってもNULLの場合はブランクで初期化しておく
-        df["備考"] = np.where(df["備考"].isnull,"",df["備考"])
+        df["備考"] = df["備考"].fillna("")
         #　入力項目のあるにも関わらず、項目あれば値セットなければ0セット
         df["日本人数"] = df["日本人数"].fillna(0)
         df["貨物重量"] = df["貨物重量"].fillna(0)

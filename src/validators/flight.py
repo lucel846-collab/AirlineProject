@@ -107,7 +107,7 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
                 message="ND(周遊)では到着空港と出発空港は同一です"
             )
 
-        elif row["運航区分"] == "NI(保全)" and not(
+        elif row["運航区分"] == "NI(保税)" and not(
             pd.isna(row["相手先空港"])  and  str(row["到着空港"]).strip() =="" 
         ):
             result.add_error(
@@ -115,7 +115,7 @@ def validate_operation_attributes(df: pd.DataFrame,_master, result: ValidationRe
                 index=index,
                 column="相手先空港",
                 value=row["相手先空港"],
-                message="NI(保全)では相手先空港は記載不要です"
+                message="NI(保税)では相手先空港は記載不要です"
             )
 
 def validate_cancelled_flights(df: pd.DataFrame,_master, result: ValidationResult) -> None:
