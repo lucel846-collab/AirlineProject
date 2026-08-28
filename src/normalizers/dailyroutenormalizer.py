@@ -39,7 +39,7 @@ class DailyRouteNormalizer:
 
         logger.info("路線コード・路線名追加完了")
 
-    def add_orthers(self, df: pd.DataFrame) -> None:
+    def add_others(self, df: pd.DataFrame) -> None:
         logger.info("その他変換処理開始")
 
         df["運航日"] = pd.to_datetime(df["運航日"])

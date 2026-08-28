@@ -85,7 +85,7 @@ class ForeignCargoNormalizer:
         logger.info("路線コード・路線名追加完了")
         return df
 
-    def add_orthers(self, df: pd.DataFrame) -> None:
+    def add_others(self, df: pd.DataFrame) -> None:
         logger.info("その他変換処理開始")
 
         df["年月"] = pd.to_datetime(df["年月"])

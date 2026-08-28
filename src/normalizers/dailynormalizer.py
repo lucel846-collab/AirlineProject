@@ -70,7 +70,7 @@ class DailyNormalizer:
         logger.info("路線コード・路線名付加処理完了")
 
 
-    def add_orthers(self, df: pd.DataFrame) -> None:
+    def add_others(self, df: pd.DataFrame) -> None:
         logger.info("その他変換処理開始")
 
         df["運航日"] = pd.to_datetime(df["運航日"])
@@ -91,6 +91,7 @@ class DailyNormalizer:
             df["備考"] = ""    
         # 欠航便の備考設定対応
         is_target4 = df["機材名"].isin(["CNL","CXL"])
+        df["備考"] = df["備考"].astype(object)
         df.loc[is_target4,"備考"] = "欠航"
 
         # 備考があってもNULLの場合はブランクで初期化しておく
