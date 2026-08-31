@@ -1,4 +1,5 @@
 import pandas as pd
+
 from src.master_data import MasterData
 from src.validators.validator_result import ValidationResult
 

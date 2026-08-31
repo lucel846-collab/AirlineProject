@@ -1,4 +1,5 @@
 import pandas as pd
+
 from src.logger import logger
 from src.master_data import MasterData
 from src.validators.date import privious_month_first_day

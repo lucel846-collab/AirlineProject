@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+
 from src.detect_layout import Layout_type
 from src.logger import logger
 

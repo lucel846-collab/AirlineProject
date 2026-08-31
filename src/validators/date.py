@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 import pandas as pd
+
 from src.validators.validator_result import ValidationResult
 
 
