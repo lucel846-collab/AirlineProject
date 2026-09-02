@@ -44,19 +44,20 @@ class MonthlyNormalizer:
         logger.info("その他変換処理開始")
 
         df["年月"] = pd.to_datetime(df["年月"])
-        #　項目初期化0セット
-        if "計画便数" not in df.columns :
+        #　項目初期化0セット        
+        if "計画便数" not in df.columns:
+            df["計画便数"] = pd.Series(0, index=df.index, dtype="Int64")
+        else:
             df["計画便数"] = df["計画便数"].astype("Int64")
-            df["計画便数"] = 0
-        if "有償貨物件数" not in df.columns :
-            df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
-            df["有償貨物件数"] = 0
-        #　入力項目のあるにも関わらず、数値なければ0セット
-        df["計画便数"] = df["計画便数"].astype("Int64")
-        df["計画便数"] = df["計画便数"].fillna(0)
-        df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
-        df["有償貨物件数"] = df["有償貨物件数"].fillna(0)
 
+        if "有償貨物件数" not in df.columns:
+            df["有償貨物件数"] = pd.Series(0, index=df.index, dtype="Int64")
+        else:
+            df["有償貨物件数"] = df["有償貨物件数"].astype("Int64")
+
+        #　入力項目のあるにも関わらず、数値なければ0セット
+        df["計画便数"] = df["計画便数"].fillna(0)
+        df["有償貨物件数"] = df["有償貨物件数"].fillna(0)
 
         df["貨物重量"] = df["貨物重量"].fillna(0)
         df["メール重量"] = df["メール重量"].fillna(0)
