@@ -9,13 +9,16 @@ class DailyNormalizer:
 
     def __init__(self, master: MasterData):
         self.master = master
-    def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("空港コードの正規化開始")
+    def normalize_prevalidate(self, df: pd.DataFrame) -> None:
+        logger.info("チェック前の正規化開始")
+        df["運航日"] = pd.to_datetime(df["運航日"])
+        # 年月を作成する。
+        df["年月"] = privious_month_first_day(df)
         # 空港コードをエイリアスから正規の空港コードに変換
         df["出発空港"] = df["出発空港"].map(self.master.get_airport_cd).fillna(df["出発空港"])
         df["到着空港"] = df["到着空港"].map(self.master.get_airport_cd).fillna(df["到着空港"])
         df["到着予定空港"] = df["到着予定空港"].map(self.master.get_airport_cd).fillna(df["到着予定空港"])
-        logger.info("空港コードの正規化完了")
+        logger.info("チェック前の正規化終了")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")
@@ -72,10 +75,6 @@ class DailyNormalizer:
 
     def add_others(self, df: pd.DataFrame) -> None:
         logger.info("その他変換処理開始")
-
-        df["運航日"] = pd.to_datetime(df["運航日"])
-        # 年月を作成する。
-        df["年月"] = privious_month_first_day(df)
         #　項目の有無により初期化する
         if "便数" not in df.columns :
             df["便数"] = 1

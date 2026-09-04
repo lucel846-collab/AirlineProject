@@ -8,8 +8,12 @@ class MonthlyNormalizer:
 
     def __init__(self, master: MasterData):
         self.master = master
-    def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("空港関連の正規化対象なし")
+
+    def normalize_prevalidate(self, df: pd.DataFrame) -> None:
+        logger.info("チェック前の正規化開始")
+        # 年月を日付型で作成する。
+        df["年月"] = pd.to_datetime(df["年月"])
+        logger.info("チェック前の正規化終了")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")

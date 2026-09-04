@@ -9,8 +9,13 @@ class DailyRouteNormalizer:
 
     def __init__(self, master: MasterData):
         self.master = master
-    def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("空港関連の正規化なし")
+
+    def normalize_prevalidate(self, df: pd.DataFrame) -> None:
+        logger.info("チェック前の正規化開始")
+        df["運航日"] = pd.to_datetime(df["運航日"])
+        # 年月を作成する。
+        df["年月"] = privious_month_first_day(df)
+        logger.info("チェック前の正規化終了")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")
@@ -42,10 +47,6 @@ class DailyRouteNormalizer:
 
     def add_others(self, df: pd.DataFrame) -> None:
         logger.info("その他変換処理開始")
-
-        df["運航日"] = pd.to_datetime(df["運航日"])
-        # 年月を作成する。
-        df["年月"] = privious_month_first_day(df)
 
         df["貨物重量"] = df["貨物重量"].fillna(0)
         df["メール重量"] = df["メール重量"].fillna(0)

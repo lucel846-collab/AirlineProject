@@ -74,7 +74,7 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         ]
 
     LAYOUT7_COLUMNS = [
-        "年月",
+        "航空会社2Lコード",
         "便名",
         "出発空港",
         "到着空港",
@@ -89,6 +89,16 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         "卸荷重量",
         "郵便積荷重量",
         "郵便卸荷重量"
+        ]
+
+    LAYOUT9_COLUMNS = [
+        "年月",
+        "便名",
+        "出発空港",
+        "到着空港",
+        "便数",
+        "貨物重量",
+        "メール重量",
         ]
 
     if all(col in df.columns for col in LAYOUT6_COLUMNS):
@@ -114,6 +124,9 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
 
     elif all(col in df.columns for col in LAYOUT8_COLUMNS):
         return Layout_type.FOREIGN_CARGO.value
+
+    elif all(col in df.columns for col in LAYOUT9_COLUMNS):
+        return Layout_type.MONTHLY_CARGO.value
 
     else:
         return Layout_type.UNKNOWN.value

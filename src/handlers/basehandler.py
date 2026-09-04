@@ -8,7 +8,7 @@ class BaseHandler:
 
     def process(self, df):
 
-        self.normalizer.normalize_airport(df)
+        self.normalizer.normalize_prevalidate(df)
         
         result = self.common_validator.validate(df)
         if result.has_errors:

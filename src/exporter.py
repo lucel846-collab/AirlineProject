@@ -69,6 +69,23 @@ REINDEXED_COLUMNS4 = [
     "航空会社名",
     "路線CD",
     "路線名",
+    "便名",
+    "便数", 
+    "座席数",
+    "旅客数",
+    "INF数",
+    "貨物重量",
+    "メール重量",
+    "事業所",
+]
+
+REINDEXED_COLUMNS5 = [
+    "運航区分",
+    "年月",
+    "航空会社",
+    "航空会社名",
+    "路線CD",
+    "路線名",
     "便数", 
     "座席数",
     "旅客数",
@@ -88,7 +105,7 @@ def export_csv(df, path: Path,layout:str) -> pd.DataFrame:
         Layout_type.MONTHLY_ROUTE.value: REINDEXED_COLUMNS2,
         Layout_type.DAILY_ROUTE.value: REINDEXED_COLUMNS3,
         Layout_type.MONTHLY_CARGO.value: REINDEXED_COLUMNS4,
-        Layout_type.FOREIGN_CARGO.value: REINDEXED_COLUMNS4,
+        Layout_type.FOREIGN_CARGO.value: REINDEXED_COLUMNS5,
         Layout_type.IRREGULAR.value: REINDEXED_COLUMNS1,
         }        
     selector = selectors.get(layout)

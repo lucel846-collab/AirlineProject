@@ -2,18 +2,28 @@ import pandas as pd
 
 from src.logger import logger
 from src.master_data import MasterData
+from src.validators.date import privious_month_first_day
 
 
 class MonthlyCargoNormalizer:
 
     def __init__(self, master: MasterData):
         self.master = master
-    def normalize_airport(self, df: pd.DataFrame) -> None:
-        logger.info("空港コードの正規化開始")
-       # 空港コードをエイリアスから正規の空港コードに変換
+
+    def normalize_prevalidate(self, df: pd.DataFrame) -> None:
+        logger.info("チェック前の正規化開始")
+        # 年月を日付型で作成する。
+        if "年月" not in df.columns :
+            df["年月"] = privious_month_first_day(df)
+        else:    
+            df["年月"] = pd.to_datetime(df["年月"])
+        # 空港コードをエイリアスから正規の空港コードに変換
         df["出発空港"] = df["出発空港"].map(self.master.get_airport_cd).fillna(df["出発空港"])
         df["到着空港"] = df["到着空港"].map(self.master.get_airport_cd).fillna(df["到着空港"])
-        logger.info("空港コードの正規化完了")
+        # 航空会社コード2Lから正規の航空会社コードに変換
+        if "航空会社2Lコード" in df.columns:
+            df["航空会社"] = df["航空会社2Lコード"].map(self.master.get_airline_code).fillna(df["航空会社2Lコード"])
+        logger.info("チェック前の正規化終了")
 
     def add_airline_name(self, df: pd.DataFrame) -> None:
         logger.info("航空会社名追加開始")
@@ -44,7 +54,6 @@ class MonthlyCargoNormalizer:
     def add_others(self, df: pd.DataFrame) -> None:
         logger.info("その他変換処理開始")
 
-        df["年月"] = pd.to_datetime(df["年月"])
         df["座席数"] = 0
         df["旅客数"] = 0
         df["INF数"] = 0

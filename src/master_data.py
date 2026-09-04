@@ -43,6 +43,11 @@ class MasterData:
             for _, row in self.airline_master.iterrows()
         }
 
+        self.airline_IATACD_dict: dict[str, str] = {
+            row["AirlineIATACD"]: row["AirlineCD"]
+            for _, row in self.airline_master.iterrows()
+        }
+
         self.airport_name_dict: dict[str, str] = {
             row["AirportCD"]: row["AirportName"]
             for _, row in self.airport_master.iterrows()
@@ -130,6 +135,11 @@ class MasterData:
             airport_CD, 
             None) 
 
+    def get_airline_code(self, airlineIATACD: str) -> str | None:
+        return self.airline_IATACD_dict.get(
+            airlineIATACD,
+            None)
+
     def get_airline_name(self, airline_cd: str) -> str | None:        
         return self.airline_name_dict.get(airline_cd, None)
 
@@ -138,6 +148,9 @@ class MasterData:
 
     def exists_airline_code(self, airline_cd: str) -> bool:
         return airline_cd in self.airline_name_dict
+
+    def exists_airline_IATACD(self, AirlineIATACD: str) -> bool:
+        return AirlineIATACD in self.airline_IATACD_dict
 
     def exists_airport_alias(self, airport_alias: str) -> bool:
         return airport_alias in self.airport_code_dict
