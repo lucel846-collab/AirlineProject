@@ -44,6 +44,23 @@ def validate_route_alias_routecode2(df: pd.DataFrame, master: MasterData,result:
                 message="路線コードがエイリアスマスタに存在しません"
             )
 
+def validate_route_alias_routecode3(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
+    filename = df.attrs.get("filename")
+    for index, row in df.iterrows():
+        key = (
+            row["航空会社"],
+            row["事業所"],
+            f"{row['出発空港']}{row['到着空港']}"
+            )
+        if  not master.exists_route_alias(*key):
+            result.add_error(
+                filenm=filename,
+                index=index,
+                column="路線コード",
+                value=f"{row['航空会社']}-{row['事業所']}-{row['出発空港']}{row['到着空港']}",
+                message="路線コードがエイリアスマスタに存在しません"
+            )
+
 
 def validate_route_alias_routename(df: pd.DataFrame, master: MasterData,result: ValidationResult) -> None:
     filename = df.attrs.get("filename")

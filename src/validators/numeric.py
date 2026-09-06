@@ -37,7 +37,7 @@ REQUIRED_NUMERIC4 = [
     "メール重量"
 ]
 
-REQUIRED_NUMERIC7 = [
+REQUIRED_NUMERIC5 = [
     "便数",
     "座席数",
     "旅客数",
@@ -46,7 +46,7 @@ REQUIRED_NUMERIC7 = [
     "メール重量"
 ]
 
-REQUIRED_NUMERIC5 = [
+REQUIRED_NUMERIC7 = [
     "便数",
     "貨物重量",
     "メール重量"
@@ -69,6 +69,12 @@ REQUIRED_NUMERIC6 = [
     "INF数",
     "貨物重量",
     "メール重量"
+]
+
+REQUIRED_NUMERIC9 = [
+    "座席数",
+    "旅客数",
+    "リードタイム"
 ]
 
 def validate_numeric_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
@@ -105,15 +111,20 @@ def validate_numeric_daily3(df: pd.DataFrame,_master, result: ValidationResult) 
 def validate_numeric_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_numeric_base(df, result, REQUIRED_NUMERIC4)
 
-def validate_numeric_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_numeric_base(df, result, REQUIRED_NUMERIC5)
 
 def validate_numeric_irreguler(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_numeric_base(df, result, REQUIRED_NUMERIC6)
 
-def validate_numeric_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+def validate_numeric_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_numeric_base(df, result, REQUIRED_NUMERIC7)
 
 def validate_numeric_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_numeric_base(df, result, REQUIRED_NUMERIC8)
 
+def validate_numeric_monthly_cargo2(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_numeric_base(df, result, REQUIRED_NUMERIC7)
+
+def validate_numeric_reservation(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_numeric_base(df, result, REQUIRED_NUMERIC9)

@@ -60,6 +60,8 @@ REQUIRED_COLUMNS4 = [
     "座席数",
     "旅客数",
     "INF数",
+    "貨物重量",
+    "メール重量",
     "事業所",
 ]
 
@@ -72,6 +74,8 @@ REQUIRED_COLUMNS5 = [
     "座席数",
     "旅客数",
     "INF数",
+    "貨物重量",
+    "メール重量",
     "事業所",
 ]
 
@@ -108,6 +112,7 @@ REQUIRED_COLUMNS6 = [
     "国内国際",
     "運航種別1",
     "運航種別2",
+    "発着区分",
     "便名",
     "出発空港",
     "到着空港",
@@ -118,6 +123,31 @@ REQUIRED_COLUMNS6 = [
     "貨物重量",
     "メール重量",
     "ハンドリング会社",
+    "事業所",
+]
+REQUIRED_COLUMNS9 = [
+    "運航区分",
+    "年月",
+    "航空会社2Lコード",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "便数", 
+    "貨物重量",
+    "メール重量",
+    "事業所",
+]
+
+REQUIRED_COLUMNS10 = [
+    "運航日",
+    "航空会社2Lコード",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "機材名",
+    "座席数",
+    "旅客数",
+    "リードタイム",
     "事業所",
 ]
 def validate_required_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
@@ -157,3 +187,8 @@ def validate_required_monthly_cargo(df: pd.DataFrame,_master, result: Validation
 def validate_required_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
     validate_required_base(df, result, REQUIRED_COLUMNS8)
 
+def validate_required_monthly_cargo2(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS9)
+
+def validate_required_reservation(df: pd.DataFrame,_master, result: ValidationResult) -> None:
+    validate_required_base(df, result, REQUIRED_COLUMNS10)

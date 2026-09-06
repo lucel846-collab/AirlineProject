@@ -10,6 +10,7 @@ from src.layout_conv import (
     layout_conv_inter,
     layout_departure_cargo,
     layout_departure_mail,
+    layout_reservation_flight,
 )
 
 
@@ -29,6 +30,7 @@ def read_excel(path: Path) -> pd.DataFrame:
         Mail_Arrival_layout = False
         Mail_Departure_layout = False
         international_flight_layout = False
+        Reservation_Flight_layout = False
 
         # シート内に「航空旅客輸送実績」が含まれているか判定
         if any(
@@ -70,6 +72,14 @@ def read_excel(path: Path) -> pd.DataFrame:
                 Mail_Departure_layout = True
             break
 
+        elif any(
+            "Passenger Reservations" in str(cell)
+            for cell in df_tmp.to_numpy().flatten()
+            ):
+            raw_df = df_tmp
+            Reservation_Flight_layout = True
+            break
+
 
     # 3. 該当シートが見つかった場合はレイアウト変換を実施
     if raw_df is not None:
@@ -85,6 +95,8 @@ def read_excel(path: Path) -> pd.DataFrame:
             df = layout_arrival_mail(raw_df)
         elif Mail_Departure_layout == True:
             df = layout_departure_mail(raw_df)
+        elif Reservation_Flight_layout == True:
+            df = layout_reservation_flight(raw_df)
     else:
         # 見つからなかった場合はデフォルト（先頭シート）を通常読み込み
         df = pd.read_excel(path)

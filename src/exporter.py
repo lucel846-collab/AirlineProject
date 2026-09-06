@@ -5,6 +5,8 @@ import pandas as pd
 from src.detect_layout import Layout_type
 from src.logger import logger
 
+# Define the reindexed columns for each layout type
+# Daily l,Daily2,Daily3 ,Irregal layout reindexed columns
 REINDEXED_COLUMNS1 = [
     "運航区分",
     "年月",
@@ -26,7 +28,7 @@ REINDEXED_COLUMNS1 = [
     "備考",
     "事業所",
 ]
-
+# Monthly route layout
 REINDEXED_COLUMNS2 = [
     "運航区分",
     "年月",
@@ -44,7 +46,7 @@ REINDEXED_COLUMNS2 = [
     "メール重量",
     "事業所",
 ]
-
+# Daily route layout 
 REINDEXED_COLUMNS3 = [
     "運航区分",
     "年月",
@@ -61,7 +63,7 @@ REINDEXED_COLUMNS3 = [
     "メール重量",
     "事業所",
 ]
-
+# Monthly cargo layout reindexed columns
 REINDEXED_COLUMNS4 = [
     "運航区分",
     "年月",
@@ -78,7 +80,7 @@ REINDEXED_COLUMNS4 = [
     "メール重量",
     "事業所",
 ]
-
+# foreign Cargo layout reindexed columns
 REINDEXED_COLUMNS5 = [
     "運航区分",
     "年月",
@@ -94,6 +96,24 @@ REINDEXED_COLUMNS5 = [
     "メール重量",
     "事業所",
 ]
+# Reservation layout reindexed columns
+REINDEXED_COLUMNS6 = [
+    "年月",
+    "運航日",
+    "航空会社",
+    "航空会社名",
+    "便名",
+    "出発空港",
+    "到着空港",
+    "機材名",
+    "座席数",
+    "旅客数",
+    "出発時刻",
+    "到着時刻",
+    "リードタイム",
+    "搭乗手続開始時刻",
+    "事業所",
+]
 
 
 def export_csv(df, path: Path,layout:str) -> pd.DataFrame:
@@ -105,8 +125,10 @@ def export_csv(df, path: Path,layout:str) -> pd.DataFrame:
         Layout_type.MONTHLY_ROUTE.value: REINDEXED_COLUMNS2,
         Layout_type.DAILY_ROUTE.value: REINDEXED_COLUMNS3,
         Layout_type.MONTHLY_CARGO.value: REINDEXED_COLUMNS4,
+        Layout_type.MONTHLY_CARGO2.value: REINDEXED_COLUMNS4,
         Layout_type.FOREIGN_CARGO.value: REINDEXED_COLUMNS5,
         Layout_type.IRREGULAR.value: REINDEXED_COLUMNS1,
+        Layout_type.RESERVATION.value: REINDEXED_COLUMNS6,
         }        
     selector = selectors.get(layout)
     df_reindexed =df.reindex(columns=selector)

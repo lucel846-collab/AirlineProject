@@ -6,7 +6,9 @@ from src.handlers.daily_irregal import DailyIrregularHandler
 from src.handlers.daily_route import DailyRouteHandler
 from src.handlers.foreign_cargo import ForeignCargoHandler
 from src.handlers.monthly_cargo import MonthlyCargoHandler
-from src.handlers.monthly_flight import MonthlyRouteHandler
+from src.handlers.monthly_cargo2 import MonthlyCargoHandler2
+from src.handlers.monthly_route import MonthlyRouteHandler
+from src.handlers.reservation import ReservationHandler
 from src.master_data import MasterData
 
 
@@ -23,8 +25,10 @@ class HandlerFactory:
             Layout_type.MONTHLY_ROUTE.value: MonthlyRouteHandler,
             Layout_type.DAILY_ROUTE.value: DailyRouteHandler,
             Layout_type.MONTHLY_CARGO.value: MonthlyCargoHandler,
+            Layout_type.MONTHLY_CARGO2.value: MonthlyCargoHandler2,
             Layout_type.FOREIGN_CARGO.value: ForeignCargoHandler,
             Layout_type.IRREGULAR.value: DailyIrregularHandler,
+            Layout_type.RESERVATION.value: ReservationHandler,
         }
         
         handler_class = handlers_map.get(layout_value)
