@@ -12,7 +12,7 @@ from src.validators.validator_flame import BaseValidator
 
 
 class MonthlyCargoValidator2(BaseValidator):
-    log_name ="monthly_cargoファイルチェック"
+    log_name ="monthly_cargo2ファイルチェック"
     required_checks = (
         validate_columns_monthly_cargo2,
         validate_required_monthly_cargo2,

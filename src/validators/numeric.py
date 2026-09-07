@@ -72,6 +72,12 @@ REQUIRED_NUMERIC6 = [
 ]
 
 REQUIRED_NUMERIC9 = [
+    "便数",
+    "貨物重量",
+    "メール重量"
+]
+
+REQUIRED_NUMERIC10 = [
     "座席数",
     "旅客数",
     "リードタイム"
@@ -124,7 +130,7 @@ def validate_numeric_foreign_cargo(df: pd.DataFrame,_master, result: ValidationR
     validate_numeric_base(df, result, REQUIRED_NUMERIC8)
 
 def validate_numeric_monthly_cargo2(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_numeric_base(df, result, REQUIRED_NUMERIC7)
+    validate_numeric_base(df, result, REQUIRED_NUMERIC9)
 
 def validate_numeric_reservation(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_numeric_base(df, result, REQUIRED_NUMERIC9)
+    validate_numeric_base(df, result, REQUIRED_NUMERIC10)

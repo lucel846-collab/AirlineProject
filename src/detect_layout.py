@@ -60,6 +60,7 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         "計画便数",
         "貨物重量",
         "メール重量",
+        "有償貨物件数",
         ]
     # DAILY_ROUTE用の列定義
     LAYOUT5_COLUMNS = [
@@ -74,6 +75,8 @@ def detect_layout(df: pd.DataFrame) -> Layout_type:
         "運航種別1",
         "運航種別2",
         "発着区分",
+        "機体記号",
+        "手荷物数",
         "ハンドリング会社",
         ]
     # MONTHLY_CARGO用の列定義
