@@ -4,6 +4,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 INPUT_DIR = BASE_DIR / "Input"
 OUTPUT_DIR = BASE_DIR / "Output"
 MASTER_DIR = BASE_DIR / "Master"
+DEFFINITION = BASE_DIR / "DATA" 
 
 ERROR_FILE = OUTPUT_DIR / "ValidationError.csv"
 
@@ -16,3 +17,5 @@ AIRPORT_OFFICE_FILE = MASTER_DIR / "airportOfficeMst.csv"
 
 LOG_DIR = BASE_DIR / "Log"
 LOG_FILE = LOG_DIR / "AirlineProject.log"
+
+DEFINITION_EXCEL_PATH = DEFFINITION / "definition.xlsx"

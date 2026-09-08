@@ -1,156 +1,10 @@
 import pandas as pd
 
+from src.constants import REQUIRED_CHECK_MAP
+from src.detect_layout import Layout_type
 from src.validators.validator_result import ValidationResult
 
-# 必須列
-REQUIRED_COLUMNS1 = [
-    "運航区分",
-    "運航日",
-    "航空会社",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "機材名",
-    "座席数",
-    "旅客数",
-    "INF数",
-    "貨物重量",
-    "メール重量",
-    "事業所",
-]
 
-REQUIRED_COLUMNS2 = [
-    "運航区分",
-    "運航日",
-    "航空会社",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "機材名",
-    "座席数",
-    "日本人数",
-    "旅客数",
-    "INF数",
-    "貨物重量",
-    "メール重量",
-    "事業所",
-]
-
-REQUIRED_COLUMNS3 = [
-    "運航区分",
-    "運航日",
-    "航空会社",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "機材名",
-    "座席数",
-    "旅客数",
-    "INF数",
-    "事業所",
-]
-
-REQUIRED_COLUMNS4 = [
-    "運航区分",
-    "年月",
-    "航空会社",
-    "路線名",
-    "発着区分",
-    "便数", 
-    "座席数",
-    "旅客数",
-    "INF数",
-    "貨物重量",
-    "メール重量",
-    "事業所",
-]
-
-REQUIRED_COLUMNS5 = [
-    "運航区分",
-    "運航日",
-    "航空会社",
-    "路線名",
-    "便数", 
-    "座席数",
-    "旅客数",
-    "INF数",
-    "貨物重量",
-    "メール重量",
-    "事業所",
-]
-
-REQUIRED_COLUMNS7 = [
-    "運航区分",
-    "年月",
-    "航空会社",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "便数", 
-    "貨物重量",
-    "メール重量",
-    "事業所",
-]
-
-REQUIRED_COLUMNS8 = [
-    "運航区分",
-    "年月",
-    "航空会社",
-    "相手先空港",
-    "フレーター便数",
-    "積荷重量",
-    "卸荷重量",
-    "郵便積荷重量",
-    "郵便卸荷重量",
-    "事業所",
-]
-
-REQUIRED_COLUMNS6 = [
-    "運航区分",
-    "運航日",
-    "航空会社",
-    "国内国際",
-    "運航種別1",
-    "運航種別2",
-    "発着区分",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "機材名",
-    "座席数",
-    "旅客数",
-    "INF数",
-    "貨物重量",
-    "メール重量",
-    "手荷物数",
-    "ハンドリング会社",
-    "事業所",
-]
-REQUIRED_COLUMNS9 = [
-    "運航区分",
-    "年月",
-    "航空会社2Lコード",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "便数", 
-    "貨物重量",
-    "メール重量",
-    "事業所",
-]
-
-REQUIRED_COLUMNS10 = [
-    "運航日",
-    "航空会社2Lコード",
-    "便名",
-    "出発空港",
-    "到着空港",
-    "機材名",
-    "座席数",
-    "旅客数",
-    "リードタイム",
-    "事業所",
-]
 def validate_required_base(df: pd.DataFrame, result: ValidationResult, required_columns: list[str]) -> None:
     #必須項目の存在チェックを行う共通ロジック"""
     filename = df.attrs.get("filename")
@@ -164,32 +18,40 @@ def validate_required_base(df: pd.DataFrame, result: ValidationResult, required_
                     value=value,
                     message="必須項目です"
                 )
+
+def _validate_by_key(df: pd.DataFrame, result: ValidationResult, layout_key: str) -> None:
+    """個別のラッパー関数から呼び出すための内部補助関数"""
+    expected_columns = REQUIRED_CHECK_MAP.get(layout_key)
+    if expected_columns is None:
+        raise ValueError(f"定義書に存在しないレイアウト名です: {layout_key}")
+    validate_required_base(df, result, expected_columns)
+
 def validate_required_daily(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS1)
+    _validate_by_key(df, result, Layout_type.DAILY.value)
 
 def validate_required_daily2(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS2)
+    _validate_by_key(df, result, Layout_type.DAILY2.value)
 
 def validate_required_daily3(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS3)
+    _validate_by_key(df, result, Layout_type.DAILY3.value)
 
 def validate_required_monthly(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS4)
+    _validate_by_key(df, result, Layout_type.MONTHLY_ROUTE.value)
     
 def validate_required_daily_route(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS5)
+    _validate_by_key(df, result, Layout_type.DAILY_ROUTE.value)
 
 def validate_required_irregular(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS6)
+    _validate_by_key(df, result, Layout_type.IRREGULAR.value)
 
 def validate_required_monthly_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS7)
+    _validate_by_key(df, result, Layout_type.MONTHLY_CARGO.value)
 
 def validate_required_foreign_cargo(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS8)
+    _validate_by_key(df, result, Layout_type.FOREIGN_CARGO.value)
 
 def validate_required_monthly_cargo2(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS9)
+    _validate_by_key(df, result, Layout_type.MONTHLY_CARGO2.value)
 
 def validate_required_reservation(df: pd.DataFrame,_master, result: ValidationResult) -> None:
-    validate_required_base(df, result, REQUIRED_COLUMNS10)
+    _validate_by_key(df, result, Layout_type.RESERVATION.value)

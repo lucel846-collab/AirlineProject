@@ -1,10 +1,10 @@
 import os
 from collections.abc import Callable
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 
+from src.constants import LAYOUT_CHECK_MAP
 from src.layout_conv import (
     layout_arrival_cargo,
     layout_arrival_mail,
@@ -16,132 +16,29 @@ from src.layout_conv import (
 )
 
 
-def _determine_layout(df: pd.DataFrame, sheet_name: str) -> Optional[Callable]:
-    """シートの内容と名前から、適用すべきレイアウト変換関数を判定する"""
-    LAYOUT1_COLUMNS = [
-        "運航日",
-        "便名",
-        "出発空港",
-        "到着空港",
-        "到着予定空港",
-        "機材名",
-        "貨物重量",
-        "メール重量",
-        ]
-    # DAILY2用の列定義
-    LAYOUT2_COLUMNS = [
-        "運航日",
-        "便名",
-        "出発空港",
-        "到着空港",
-        "到着予定空港",
-        "機材名",
-        "日本人数",
-        "貨物重量",
-        "メール重量",
-        ]
-    # DAILY3用の列定義
-    LAYOUT3_COLUMNS = [
-        "運航日",
-        "便名",
-        "出発空港",
-        "到着空港",
-        "到着予定空港",
-        "機材名",
-        ]
-    # MONTHLY_ROUTE用の列定義
-    LAYOUT4_COLUMNS = [
-        "年月",
-        "路線名",
-        "発着区分",
-        "計画便数",
-        "貨物重量",
-        "メール重量",
-        "有償貨物件数",
-        ]
-    # DAILY_ROUTE用の列定義
-    LAYOUT5_COLUMNS = [
-        "運航日",
-        "路線名",
-        "便数",
-        "貨物重量",
-        "メール重量",
-        ]
-    # IRREGULAR用の列定義
-    LAYOUT6_COLUMNS = [
-        "運航種別1",
-        "運航種別2",
-        "発着区分",
-        "機体記号",
-        "手荷物数",
-        "ハンドリング会社",
-        ]
-    # MONTHLY_CARGO用の列定義
-    LAYOUT7_COLUMNS = [
-        "年月",
-        "航空会社",
-        "便名",
-        "出発空港",
-        "到着空港",
-        "便数",
-        "貨物重量",
-        "メール重量",
-        ]
-    # FOREIGN_CARGO用の列定義
-    LAYOUT8_COLUMNS = [
-        "年月",
-        "相手先空港",                
-        "積荷重量",
-        "卸荷重量",
-        "郵便積荷重量",
-        "郵便卸荷重量",
-        "フレーター便数",
-        ]
- 
-    # MONTHLY_CARGO2用の列定義
-    LAYOUT9_COLUMNS = [
-        "航空会社2Lコード",
-        "便名",
-        "出発空港",
-        "到着空港",
-        "便数",
-        "貨物重量",
-        "メール重量",
-        ]
-    # RESERVATION用の列定義
-    LAYOUT10_COLUMNS = [
-        "運航日",
-        "航空会社2Lコード",
-        "便名",
-        "出発空港",
-        "到着空港",
-        "機材名",
-        "出発時刻",
-        "到着時刻",
-        "リードタイム"
-        ]
-
+def _determine_layout(
+    df: pd.DataFrame, sheet_name: str
+) -> tuple[str, str] | Callable | None:
     # セル内の全文字列を結合した1つの大きなテキストを作る（検索を高速化）
     all_text = " ".join(df.fillna("").astype(str).to_numpy().flatten())
-    # ここで、各レイアウトの列定義と照合して、どのレイアウトに該当するかを判定する
-    if any(
-        all(col in all_text for col in columns)
-        for columns in (
-            LAYOUT1_COLUMNS,
-            LAYOUT2_COLUMNS,
-            LAYOUT3_COLUMNS,
-            LAYOUT4_COLUMNS,
-            LAYOUT5_COLUMNS,
-            LAYOUT6_COLUMNS,
-            LAYOUT7_COLUMNS,
-            LAYOUT8_COLUMNS,
-            LAYOUT9_COLUMNS,
-            LAYOUT10_COLUMNS,
-        )
-    ):
-        return "list_format"
+    """ ここで、各レイアウト """   
+    """シートの内容と名前から、適用すべきレイアウトを判定する。
+    
+    戻り値:
+        - 一覧形式の場合: ("list_format", "DAILY") のようなタプル
+        - 帳票形式の場合: 変換関数 (Callable)
+        - 該当なしの場合: None
+    """
+      # セル内の全文字列を結合した1つの大きなテキストを作る（検索を高速化）
+    all_text = " ".join(df.fillna("").astype(str).to_numpy().flatten())
+    sorted_layouts = sorted(LAYOUT_CHECK_MAP.items(), key=lambda x: len(x[1]), reverse=True)
+    # 1. 一覧形式の自動一括判定（エクセル定義ベース）
+    for layout_name, check_cols in sorted_layouts:
+        if all(col in all_text for col in check_cols):
+            # 状態とレイアウト名をタプルで綺麗に返す
+            return "list_format", layout_name
 
-    # 1. キーワードだけで一発判定できるもの
+    # 2. キーワードだけで一発判定できるもの
     if "航空旅客輸送実績" in all_text:
         return layout_conv_domestic
     if "Air Transport Statistics" in all_text:
@@ -149,7 +46,7 @@ def _determine_layout(df: pd.DataFrame, sheet_name: str) -> Optional[Callable]:
     if "Passenger Reservations" in all_text:
         return layout_reservation_flight
 
-    # 2. キーワード + シート名で複合判定するもの
+    # 3. キーワード + シート名で複合判定するもの
     if "到着AIRPORT" in all_text:
         if sheet_name.startswith("Ｈ０１３"):
             return layout_arrival_cargo
@@ -176,19 +73,25 @@ def read_excel(path: Path) -> pd.DataFrame:
     for sheet in excel_file.sheet_names:
         # 一旦 header=None で読み込んで判定に回す
         df_tmp = pd.read_excel(excel_file, sheet_name=sheet, header=None)
-        result_type = _determine_layout(df_tmp, sheet)
-        # レイアウト判定と同時に、対応する関数を取得
-        if result_type == "list_format":
-            # 一覧形式だと判定された場合、1行目をヘッダーとして正しく読み直す
-            # (または df_tmp の1行目を columns に設定する処理でも可)
-            df_actual = pd.read_excel(excel_file, sheet_name=sheet) 
-            df_actual.attrs["filename"] = os.path.basename(path)
-            return df_actual
+        result = _determine_layout(df_tmp, sheet)
+        if isinstance(result, tuple) :
+            status, layout_name = result
+            if status == "list_format":
+                # 一覧形式のレイアウトが判定された場合、1行目をヘッダーとして正しく読み直す
+                df_actual = pd.read_excel(excel_file, sheet_name=sheet)
+                df_actual.attrs["filename"] = os.path.basename(path)
+                df_actual.attrs["layout_name"] = layout_name
+
+                return df_actual  
             
-        elif callable(result_type):
+        elif callable(result):
             # 帳票形式の変換関数が返ってきた場合
-            converted_df = result_type(df_tmp)
+            converted_df = result(df_tmp)
             converted_df.attrs["filename"] = os.path.basename(path)
             return converted_df
-        
-    raise ValueError(f"対応するレイアウトが見つかりませんでした: {path.name}")
+        #else:
+        #    print(os.path.basename(path))
+        #    print(sheet)
+        #    print(result)
+
+    #raise ValueError(f"対応するレイアウトが見つかりませんでした: {path.name}")
