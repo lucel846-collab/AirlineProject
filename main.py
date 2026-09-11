@@ -1,7 +1,7 @@
 import glob
 import os
+from pathlib import Path
 
-from src.detect_layout import detect_layout
 from src.exporter import export_csv
 from src.handlers.factory import HandlerFactory
 from src.logger import logger
@@ -26,29 +26,30 @@ def main():
 
         logger.info(f"処理ファイル: {fbasename}")
 
-        df = read_excel(file_path)
+        read_results = read_excel(file_path)
 
-        layout = detect_layout(df)
-        logger.info(f"レイアウトタイプ: {layout}")
+        for read_result in read_results:
+            #print(read_result)
+            df = read_result.df
+            #layout = detect_layout(df)
+            layout = read_result.layout
+            logger.info(f"レイアウトタイプ: {layout}")
 
-        handler = HandlerFactory.create_handler(layout, master)
+            handler = HandlerFactory.create_handler(layout, master)
 
-        if handler is None:
-            logger.error(f"未対応のレイアウトです: {layout}")
-            continue
+            if handler is None:
+                logger.error(f"未対応のレイアウトです: {layout}")
+                continue
 
-        result = handler.process(df)
+            result = handler.process(df)
 
-        if result.has_errors:
-            result.export()
-            continue
+            if result.has_errors:
+                result.export()
+                continue
 
-        file_out_path = OUTPUT_DIR / fbasename.replace(
-            ".xlsx",
-            ".csv"
-        )
-
-        export_csv(df, file_out_path, layout)
+            filename = Path(fbasename).stem
+            file_out_path = OUTPUT_DIR / f"{filename}_{layout}.csv"
+            export_csv(df, file_out_path, layout)
 
     logger.info("△△△変換完了△△△")
 
