@@ -48,3 +48,9 @@ def convert_to_datetime(target_date: date, time_num: int) -> datetime:
 def convert_to_datetime_minus(target_date: date, time_num: int) -> datetime:
     # 前段で日時型になっている出発時刻から、リードタイム（分）を引き算する
     return target_date - timedelta(minutes=time_num)
+
+def convert_to_datetime_minus2(target_date:date,time_num:int) -> datetime:
+    hour = time_num // 100
+    minute = time_num % 100
+    dif_time = hour * 60 + minute
+    return target_date - timedelta(minutes=dif_time)

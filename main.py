@@ -31,6 +31,7 @@ def main():
         for read_result in read_results:
             #print(read_result)
             df = read_result.df
+            df.attrs["filename"] = fbasename
             #layout = detect_layout(df)
             layout = read_result.layout
             logger.info(f"レイアウトタイプ: {layout}")
@@ -45,6 +46,7 @@ def main():
 
             if result.has_errors:
                 result.export()
+                print(df)
                 continue
 
             filename = Path(fbasename).stem

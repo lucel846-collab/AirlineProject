@@ -3,7 +3,7 @@ import pandas as pd
 from src.logger import logger
 from src.master_data import MasterData
 from src.validators.date import privious_month_first_day
-from src.validators.time import convert_to_datetime, convert_to_datetime_minus
+from src.validators.time import convert_to_datetime, convert_to_datetime_minus2
 
 
 class DailyReservationNormalizer:
@@ -65,6 +65,7 @@ class DailyReservationNormalizer:
 
         df.loc[Condition1,"出発時刻"] = df.loc[Condition1].apply(lambda row: convert_to_datetime(row["運航日"], row["出発時刻"]), axis=1)
         df.loc[Condition2,"到着時刻"] = df.loc[Condition2].apply(lambda row: convert_to_datetime(row["運航日"], row["到着時刻"]), axis=1)    
-        df.loc[Condition1,"搭乗手続開始時刻"] = df.loc[Condition1].apply(lambda row: convert_to_datetime_minus(row["出発時刻"], row["リードタイム"]), axis=1)
+        df.loc[Condition1,"搭乗手続開始時刻"] = df.loc[Condition1].apply(
+            lambda row: convert_to_datetime_minus2(row["出発時刻"], row["リードタイム"]), axis=1)
         logger.info("その他変換処理完了")
 

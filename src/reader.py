@@ -1,32 +1,41 @@
-import os
 from collections.abc import Callable
 from pathlib import Path
 
 import pandas as pd
 
 from src.constants import LAYOUT_CHECK_MAP
-from src.layout_conv import (
+from src.converters.layout_cargo import (
     layout_arrival_cargo,
     layout_arrival_mail,
-    layout_conv_domestic,
-    layout_conv_inter,
     layout_departure_cargo,
     layout_departure_mail,
-    layout_passenger_report,
-    layout_reservation_flight,
 )
+from src.converters.layout_mixed import (
+    layout_passenger_report,
+    layout_passenger_report2,
+    layout_passenger_report3,
+)
+from src.converters.layout_passenger import (
+    layout_conv_domestic,
+    layout_conv_domestic2,
+    layout_conv_inter,
+)
+from src.converters.layout_resavation import layout_reservation_flight
 from src.resultform import ReadResult
 
 
 def _determine_layout(
     df: pd.DataFrame, sheet_name: str) -> tuple[str, str] | Callable | None:
     # セル内の全文字列を結合した1つの大きなテキストを作る（検索を高速化）
-    all_text = " ".join(df.head(5).fillna("").astype(str).to_numpy().flatten())
+    all_text = " ".join(df.head(6).fillna("").astype(str).to_numpy().flatten())
     sorted_layouts = sorted(LAYOUT_CHECK_MAP.items(), key=lambda x: len(x[1]), reverse=True)
 
     # 1. キーワードだけで一発判定できるもの
     if "航空旅客輸送実績" in all_text:
-        return layout_conv_domestic
+        if "日本人" in all_text:
+            return layout_conv_domestic2
+        else:
+            return layout_conv_domestic
     if "Air Transport Statistics" in all_text:
         return layout_conv_inter
     if "Passenger Reservations" in all_text:
@@ -44,9 +53,17 @@ def _determine_layout(
             return layout_departure_cargo
         if sheet_name.startswith("Ｈ００８"):
             return layout_departure_mail
-        
+
     if "旅客輸送実績" in all_text and sheet_name.startswith("入力シート"):
-        return layout_passenger_report
+        
+        if "計画便数" in all_text :
+            return layout_passenger_report2
+
+        elif "有償貨物件数" in all_text :
+            return layout_passenger_report3
+
+        else:
+            return layout_passenger_report
 
 
         # 必要に応じてMail_Departure用のシート名条件をここに追加
@@ -74,7 +91,6 @@ def read_excel(path: Path) -> list[ReadResult]:
             if status == "list_format":
                 # 一覧形式のレイアウトが判定された場合、1行目をヘッダーとして正しく読み直す
                 df_actual = pd.read_excel(excel_file, sheet_name=sheet)
-                df_actual.attrs["filename"] = os.path.basename(path)
                 df_actual.attrs["layout_name"] = layout_name
 
                 results.append(ReadResult(df=df_actual,layout=layout_name))  
